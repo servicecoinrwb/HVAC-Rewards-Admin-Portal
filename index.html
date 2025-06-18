@@ -76,12 +76,18 @@
       <!-- System Configuration -->
       <section id="config" class="card">
         <h3 class="text-lg font-semibold mb-4 text-gray-800">1. System Configuration</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div><label class="block text-sm font-medium text-gray-700">SPN Token</label><input class="input-field" id="spn-address" value="0x29950E3186999F490777f00d97279a62b2dD1818" /></div>
           <div><label class="block text-sm font-medium text-gray-700">Converter Contract</label><input class="input-field" id="converter-address" value="0x524997F5Cf25537a275ad5D0A6A346c733a4fA41" /></div>
           <div><label class="block text-sm font-medium text-gray-700">Staking Contract</label><input class="input-field" id="staking-address" value="0x691e29E98ECDc5ae948355F30102cD4D637eddB7" /></div>
           <div><label class="block text-sm font-medium text-gray-700">Yield Contract</label><input class="input-field" id="yield-address" value="0x71f618EFb0422687e5B2ad9cD973aDACb645D9DE" /></div>
         </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 mt-4 border-t">
+           <div><label class="block text-sm font-medium text-gray-700">SRV Token</label><input class="input-field bg-gray-100" id="srv-address" placeholder="Fetched automatically" readonly /></div>
+           <div><label class="block text-sm font-medium text-gray-700">SREV Token</label><input class="input-field bg-gray-100" id="srev-address" placeholder="Fetched automatically" readonly /></div>
+           <div><label class="block text-sm font-medium text-gray-700">Reward Token</label><input class="input-field bg-gray-100" id="reward-token-address" placeholder="Fetched automatically" readonly /></div>
+        </div>
+        <p class="text-xs text-gray-500 mt-2">Dependent token addresses are fetched after connecting your wallet.</p>
       </section>
 
       <!-- Customer Management & Issuing Points -->
@@ -222,7 +228,7 @@
         const newCustomer = {
             customerNumber: customerNumber,
             walletAddress: walletAddress,
-            balances: { spn: '0', srv: '0', srev: '0', yield: '0' }
+            balances: { spn: '0.000000', srv: '0.000000', srev: '0.000000', yield: '0.000000' }
         };
         
         customers.push(newCustomer);
@@ -276,10 +282,43 @@
             connectButton.disabled = true;
             walletError.classList.add('hidden');
             log(`Admin wallet ${adminAddress} connected.`);
+            fetchContractAddresses();
         } catch (error) {
             log('Failed to connect wallet.', true);
             walletError.textContent = `Connection failed: ${error.message}`;
             walletError.classList.remove('hidden');
+        }
+    }
+
+    async function fetchContractAddresses() {
+        log('Fetching dependent contract addresses...');
+        try {
+            const converterAddress = getAddress('converter-address');
+            const stakingAddress = getAddress('staking-address');
+            const yieldAddress = getAddress('yield-address');
+
+            if (!ethers.utils.isAddress(converterAddress) || !ethers.utils.isAddress(stakingAddress) || !ethers.utils.isAddress(yieldAddress)) {
+                log('One or more main contract addresses are invalid. Cannot fetch dependencies.', true);
+                return;
+            }
+
+            const converter = new ethers.Contract(converterAddress, converterAbi, provider);
+            const staking = new ethers.Contract(stakingAddress, stakingAbi, provider);
+            const yieldContract = new ethers.Contract(yieldAddress, yieldAbi, provider);
+
+            const [srvAddr, srevAddr, rewardTokenAddr] = await Promise.all([
+                converter.srv(),
+                staking.SREV(),
+                yieldContract.rewardToken()
+            ]);
+
+            document.getElementById('srv-address').value = srvAddr;
+            document.getElementById('srev-address').value = srevAddr;
+            document.getElementById('reward-token-address').value = rewardTokenAddr;
+            log('Fetched dependent contract addresses successfully.');
+        } catch (error) {
+             console.error("Fetch Error:", error);
+            log('Could not auto-fetch contract addresses. Check contract addresses and network.', true);
         }
     }
     
@@ -319,18 +358,14 @@
             return;
         }
         
-        // This function now requires the Reward Token address to be fetched first.
-        // Assuming updateCustomerBalance or a similar function populates this.
-        // For simplicity, we'll hardcode it here, but in a real app, you'd have a better state management.
-        const yieldContractForToken = new ethers.Contract(yieldAddress, yieldAbi, provider);
-        const rewardTokenAddress = await yieldContractForToken.rewardToken();
+        const yieldContract = new ethers.Contract(yieldAddress, yieldAbi, signer);
+        const rewardTokenAddress = await yieldContract.rewardToken();
         if(!rewardTokenAddress || rewardTokenAddress === ethers.constants.AddressZero) {
             log('Could not determine reward token address from yield contract.', true);
             return;
         }
         
         const rewardTokenContract = new ethers.Contract(rewardTokenAddress, erc20Abi, signer);
-        const yieldContract = new ethers.Contract(yieldAddress, yieldAbi, signer);
 
         const decimals = await rewardTokenContract.decimals();
         const amountWei = ethers.utils.parseUnits(amount, decimals);
@@ -361,14 +396,17 @@
             const spnContract = new ethers.Contract(getAddress('spn-address'), erc20Abi, provider);
             const converterContract = new ethers.Contract(getAddress('converter-address'), converterAbi, provider);
             const srvAddress = await converterContract.srv();
+            if (!ethers.utils.isAddress(srvAddress)) return;
             const srvContract = new ethers.Contract(srvAddress, erc20Abi, provider);
 
             const stakingContract = new ethers.Contract(getAddress('staking-address'), stakingAbi, provider);
             const srevAddress = await stakingContract.SREV();
+             if (!ethers.utils.isAddress(srevAddress)) return;
             const srevContract = new ethers.Contract(srevAddress, erc20Abi, provider);
             
             const yieldContract = new ethers.Contract(getAddress('yield-address'), yieldAbi, provider);
             const rewardTokenAddress = await yieldContract.rewardToken();
+             if (!ethers.utils.isAddress(rewardTokenAddress)) return;
             const rewardTokenContract = new ethers.Contract(rewardTokenAddress, erc20Abi, provider);
 
             const [spnBal, srvBal, srevBal, yieldPending, spnDec, srvDec, srevDec, yieldDec] = await Promise.all([
