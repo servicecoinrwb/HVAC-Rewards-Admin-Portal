@@ -407,29 +407,30 @@
             const srvContract = new ethers.Contract(srvAddress, erc20Abi, provider);
             const srevContract = new ethers.Contract(srevAddress, erc20Abi, provider);
             const yieldContract = new ethers.Contract(getAddress('yield-address'), yieldAbi, provider);
-            const rewardTokenContract = new ethers.Contract(rewardTokenAddress, erc20Abi, provider);
-
-            const [spnBal, srvBal, srevBal, yieldPending, spnDec, srvDec, srevDec, yieldDec] = await Promise.all([
+            
+            const [spnBal, srvBal, srevBal, yieldPending, spnDec, srvDec, srevDec] = await Promise.all([
                 spnContract.balanceOf(walletAddress),
                 srvContract.balanceOf(walletAddress),
                 srevContract.balanceOf(walletAddress),
                 yieldContract.viewPending(walletAddress),
                 spnContract.decimals(),
                 srvContract.decimals(),
-                srevContract.decimals(),
-                rewardTokenContract.decimals()
+                srevContract.decimals()
             ]);
 
             const customer = customers.find(c => c.walletAddress.toLowerCase() === walletAddress.toLowerCase());
             if (!customer) return;
 
             const format = (val, dec) => parseFloat(ethers.utils.formatUnits(val, dec)).toFixed(6);
+            
+            // CORRECTED: The pending yield from the contract is likely scaled by 1e18, so we format it with 18 decimals.
+            const formattedYield = parseFloat(ethers.utils.formatUnits(yieldPending, 18)).toFixed(6);
 
             customer.balances = {
                 spn: format(spnBal, spnDec),
                 srv: format(srvBal, srvDec),
                 srev: format(srevBal, srevDec),
-                yield: format(yieldPending, yieldDec)
+                yield: formattedYield
             };
             
             document.getElementById(`spn-${walletAddress}`).textContent = customer.balances.spn;
@@ -454,4 +455,4 @@
 
   </script>
 </body>
-</html>
+</ht
