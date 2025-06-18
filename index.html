@@ -312,10 +312,20 @@
     async function fundYield() {
         if (!signer) { log('Please connect wallet first.', true); return; }
         const amount = document.getElementById('fund-amount').value;
-        const rewardTokenAddress = "0x...YOUR_REWARD_TOKEN_ADDRESS"; // Replace with actual reward token address
         const yieldAddress = getAddress('yield-address');
+
         if (!amount || !yieldAddress) {
             log('Please provide fund amount and yield contract address.', true);
+            return;
+        }
+        
+        // This function now requires the Reward Token address to be fetched first.
+        // Assuming updateCustomerBalance or a similar function populates this.
+        // For simplicity, we'll hardcode it here, but in a real app, you'd have a better state management.
+        const yieldContractForToken = new ethers.Contract(yieldAddress, yieldAbi, provider);
+        const rewardTokenAddress = await yieldContractForToken.rewardToken();
+        if(!rewardTokenAddress || rewardTokenAddress === ethers.constants.AddressZero) {
+            log('Could not determine reward token address from yield contract.', true);
             return;
         }
         
@@ -358,6 +368,8 @@
             const srevContract = new ethers.Contract(srevAddress, erc20Abi, provider);
             
             const yieldContract = new ethers.Contract(getAddress('yield-address'), yieldAbi, provider);
+            const rewardTokenAddress = await yieldContract.rewardToken();
+            const rewardTokenContract = new ethers.Contract(rewardTokenAddress, erc20Abi, provider);
 
             const [spnBal, srvBal, srevBal, yieldPending, spnDec, srvDec, srevDec, yieldDec] = await Promise.all([
                 spnContract.balanceOf(walletAddress),
@@ -367,13 +379,13 @@
                 spnContract.decimals(),
                 srvContract.decimals(),
                 srevContract.decimals(),
-                new ethers.Contract(await yieldContract.rewardToken(), erc20Abi, provider).decimals()
+                rewardTokenContract.decimals()
             ]);
 
             const customer = customers.find(c => c.walletAddress.toLowerCase() === walletAddress.toLowerCase());
             if (!customer) return;
 
-            const format = (val, dec) => parseFloat(ethers.utils.formatUnits(val, dec)).toFixed(4);
+            const format = (val, dec) => parseFloat(ethers.utils.formatUnits(val, dec)).toFixed(6);
 
             customer.balances = {
                 spn: format(spnBal, spnDec),
@@ -383,9 +395,9 @@
             };
             
             document.getElementById(`spn-${walletAddress}`).textContent = customer.balances.spn;
-            document.getElementById(`srv-${walletAddress}`).textContent = customer.balances.srv;
-            document.getElementById(`srev-${walletAddress}`).textContent = customer.balances.srev;
-            document.getElementById(`yield-${walletAddress}`).textContent = customer.balances.yield;
+            document.getElementById(`srv-${customer.walletAddress}`).textContent = customer.balances.srv;
+            document.getElementById(`srev-${customer.walletAddress}`).textContent = customer.balances.srev;
+            document.getElementById(`yield-${customer.walletAddress}`).textContent = customer.balances.yield;
                 
         } catch (error) {
             log(`Failed to update balances for ${walletAddress.substring(0,6)}...: ${error.message}`, true);
