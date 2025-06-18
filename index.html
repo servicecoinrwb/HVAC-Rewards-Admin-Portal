@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HVAC Rewards Admin Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
+    <!-- Corrected Ethers.js CDN link -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js" xintegrity="sha512-FDc6aAunHk1DRm3w9eNPNXp4BqA0bG8I41u2aT4YpB3zP0pMHHJJoL33QZgTCRgI2E1IxfX5uGv1oXb4PzXgA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -46,7 +47,7 @@
             width: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #f3f4f6; /* bg-gray-100 */
+            background: #eff6ff; /* bg-blue-50 */
         }
         ::-webkit-scrollbar-thumb {
             background: #a5b4fc; /* bg-indigo-300 */
@@ -57,12 +58,12 @@
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="bg-blue-50 text-gray-800">
 
     <div class="container mx-auto p-4 md:p-8">
         <header class="text-center mb-12">
             <h1 class="text-4xl font-bold text-gray-900">HVAC Rewards Admin Portal</h1>
-            <p class="text-lg text-gray-600 mt-2">Manage your on-chain customer loyalty program.</p>
+            <p class="text-lg text-gray-700 mt-2">Manage your on-chain customer loyalty program.</p>
             <div id="connection-status" class="mt-4">
                 <button id="connect-wallet" class="btn">Connect Wallet</button>
                 <p id="wallet-info" class="hidden text-green-600 font-semibold"></p>
