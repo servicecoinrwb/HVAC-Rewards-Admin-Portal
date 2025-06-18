@@ -16,13 +16,19 @@
       background-color: #1e3a8a; /* Dark blue */
     }
     .sidebar-link {
-      @apply flex items-center space-x-3 py-2.5 px-4 text-sm font-medium text-blue-100 hover:bg-blue-700 rounded transition-colors duration-200;
+      @apply flex items-center space-x-3 py-2.5 px-4 text-sm font-medium text-white hover:bg-blue-700 rounded transition-colors duration-200;
     }
     .card {
       @apply bg-white shadow-lg rounded-xl p-6;
     }
+    .input-group {
+        @apply relative;
+    }
     .input-field {
-        @apply w-full mt-1 border rounded-md p-2 border-gray-300 focus:ring-indigo-500 focus:border-indigo-500;
+        @apply w-full mt-1 border rounded-md p-2 pr-10 border-gray-300 focus:ring-indigo-500 focus:border-indigo-500;
+    }
+    .input-adornment {
+        @apply absolute inset-y-0 right-0 top-1/2 -translate-y-1/4 flex items-center pr-3;
     }
     .btn {
         @apply inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white transition-colors duration-200;
@@ -44,6 +50,9 @@
     }
     .table-cell {
       @apply px-6 py-4 whitespace-nowrap text-sm text-gray-700;
+    }
+    .action-card {
+        @apply block space-y-2 p-4 bg-gray-50 rounded-lg text-center cursor-pointer hover:bg-gray-100 hover:shadow-md transition-all duration-200;
     }
   </style>
 </head>
@@ -83,15 +92,15 @@
       <section id="config" class="card">
         <h3 class="text-lg font-semibold mb-4 text-gray-800">1. System Configuration</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div><label class="block text-sm font-medium text-gray-700">SPN Token</label><input class="input-field" id="spn-address" value="0x29950E3186999F490777f00d97279a62b2dD1818" /></div>
-          <div><label class="block text-sm font-medium text-gray-700">Converter Contract</label><input class="input-field" id="converter-address" value="0x524997F5Cf25537a275ad5D0A6A346c733a4fA41" /></div>
-          <div><label class="block text-sm font-medium text-gray-700">Staking Contract</label><input class="input-field" id="staking-address" value="0x691e29E98ECDc5ae948355F30102cD4D637eddB7" /></div>
-          <div><label class="block text-sm font-medium text-gray-700">Yield Contract</label><input class="input-field" id="yield-address" value="0x71f618EFb0422687e5B2ad9cD973aDACb645D9DE" /></div>
+          <div class="input-group"><label class="block text-sm font-medium text-gray-700">SPN Token</label><input class="input-field" id="spn-address" value="0x29950E3186999F490777f00d97279a62b2dD1818" oninput="updateLink(this)"/><a id="spn-address-link" href="#" target="_blank" class="input-adornment"><svg class="h-5 w-5 text-gray-400 hover:text-indigo-600"  fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg></a></div>
+          <div class="input-group"><label class="block text-sm font-medium text-gray-700">Converter Contract</label><input class="input-field" id="converter-address" value="0x524997F5Cf25537a275ad5D0A6A346c733a4fA41" oninput="updateLink(this)"/><a id="converter-address-link" href="#" target="_blank" class="input-adornment"><svg class="h-5 w-5 text-gray-400 hover:text-indigo-600"  fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg></a></div>
+          <div class="input-group"><label class="block text-sm font-medium text-gray-700">Staking Contract</label><input class="input-field" id="staking-address" value="0x691e29E98ECDc5ae948355F30102cD4D637eddB7" oninput="updateLink(this)"/><a id="staking-address-link" href="#" target="_blank" class="input-adornment"><svg class="h-5 w-5 text-gray-400 hover:text-indigo-600"  fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg></a></div>
+          <div class="input-group"><label class="block text-sm font-medium text-gray-700">Yield Contract</label><input class="input-field" id="yield-address" value="0x71f618EFb0422687e5B2ad9cD973aDACb645D9DE" oninput="updateLink(this)"/><a id="yield-address-link" href="#" target="_blank" class="input-adornment"><svg class="h-5 w-5 text-gray-400 hover:text-indigo-600"  fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg></a></div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 mt-4 border-t">
-           <div><label class="block text-sm font-medium text-gray-700">SRV Token</label><input class="input-field bg-gray-100" id="srv-address" placeholder="Fetched automatically" readonly /></div>
-           <div><label class="block text-sm font-medium text-gray-700">SREV Token</label><input class="input-field bg-gray-100" id="srev-address" placeholder="Fetched automatically" readonly /></div>
-           <div><label class="block text-sm font-medium text-gray-700">Reward Token</label><input class="input-field bg-gray-100" id="reward-token-address" placeholder="Fetched automatically" readonly /></div>
+           <div class="input-group"><label class="block text-sm font-medium text-gray-700">SRV Token</label><input class="input-field bg-gray-100" id="srv-address" placeholder="Fetched automatically" readonly oninput="updateLink(this)"/><a id="srv-address-link" href="#" target="_blank" class="input-adornment"><svg class="h-5 w-5 text-gray-400 hover:text-indigo-600"  fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg></a></div>
+           <div class="input-group"><label class="block text-sm font-medium text-gray-700">SREV Token</label><input class="input-field bg-gray-100" id="srev-address" placeholder="Fetched automatically" readonly oninput="updateLink(this)"/><a id="srev-address-link" href="#" target="_blank" class="input-adornment"><svg class="h-5 w-5 text-gray-400 hover:text-indigo-600"  fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg></a></div>
+           <div class="input-group"><label class="block text-sm font-medium text-gray-700">Reward Token</label><input class="input-field bg-gray-100" id="reward-token-address" placeholder="Fetched automatically" readonly oninput="updateLink(this)"/><a id="reward-token-address-link" href="#" target="_blank" class="input-adornment"><svg class="h-5 w-5 text-gray-400 hover:text-indigo-600"  fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg></a></div>
         </div>
         <p class="text-xs text-gray-500 mt-2">Dependent token addresses are fetched after connecting your wallet.</p>
       </section>
@@ -120,19 +129,19 @@
               <div class="space-y-2 p-4 bg-gray-50 rounded-lg">
                    <label class="block text-sm font-semibold text-gray-700">Issue Points</label>
                    <input id="spn-amount" type="number" class="input-field" placeholder="e.g. 500" />
-                   <button id="issue-spn" class="btn btn-green w-full">Issue SPN</button>
+                   <button id="issue-spn" class="btn btn-green w-full mt-2">Issue SPN</button>
               </div>
               <!-- Convert -->
-              <div class="space-y-2 p-4 bg-gray-50 rounded-lg">
-                  <label class="block text-sm font-semibold text-gray-700">Convert SPN to SRV</label>
-                   <p class="text-xs text-gray-500 h-6">Converts entire SPN balance.</p>
-                   <button id="convert-spn" class="btn btn-primary w-full">Convert SPN (Backend)</button>
+              <div id="convert-spn" class="action-card">
+                  <h4 class="text-sm font-semibold text-gray-700">Convert SPN to SRV</h4>
+                   <p class="text-xs text-gray-500">Converts entire SPN balance.</p>
+                   <p class="text-xs font-bold text-blue-600 mt-2">Backend Action</p>
               </div>
               <!-- Stake -->
-              <div class="space-y-2 p-4 bg-gray-50 rounded-lg">
-                  <label class="block text-sm font-semibold text-gray-700">Stake SRV</label>
-                  <p class="text-xs text-gray-500 h-6">Stakes entire SRV balance.</p>
-                  <button id="stake-srv" class="btn btn-primary w-full">Stake SRV (Backend)</button>
+              <div id="stake-srv" class="action-card">
+                  <h4 class="text-sm font-semibold text-gray-700">Stake SRV</h4>
+                  <p class="text-xs text-gray-500">Stakes entire SRV balance.</p>
+                  <p class="text-xs font-bold text-blue-600 mt-2">Backend Action</p>
               </div>
           </div>
           <p class="text-xs text-center text-gray-500 mt-4">These actions simulate calls to your secure backend, which holds customer keys and executes transactions.</p>
@@ -245,6 +254,16 @@
         return document.getElementById(id).value;
     }
     
+    function updateLink(inputElement) {
+        const address = inputElement.value;
+        const linkElement = document.getElementById(inputElement.id + '-link');
+        if (linkElement && ethers.utils.isAddress(address)) {
+            linkElement.href = `https://arbiscan.io/address/${address}`;
+        } else if (linkElement) {
+             linkElement.href = '#';
+        }
+    }
+    
     // --- Customer & Table Management ---
     function addCustomer() {
         const customerNumber = getAddress('customer-number');
@@ -353,6 +372,12 @@
             document.getElementById('srv-address').value = srvAddr;
             document.getElementById('srev-address').value = srevAddr;
             document.getElementById('reward-token-address').value = rewardTokenAddr;
+            
+            // Trigger link updates
+            updateLink(document.getElementById('srv-address'));
+            updateLink(document.getElementById('srev-address'));
+            updateLink(document.getElementById('reward-token-address'));
+
             log('Fetched dependent contract addresses successfully.');
         } catch (error) {
              console.error("Fetch Error:", error);
@@ -521,6 +546,7 @@
     document.getElementById('stake-srv').addEventListener('click', stakeSrv);
 
     // --- Initial Load ---
+    document.querySelectorAll('.input-group input').forEach(el => updateLink(el));
     loadCustomers();
     renderTable();
 
