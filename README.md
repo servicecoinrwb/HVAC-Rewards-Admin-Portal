@@ -1,6 +1,8 @@
-HVAC Rewards Admin Portal: A Comprehensive Guide
+HVAC Rewards Admin Portal
+A frontend management interface for an on-chain customer loyalty and rewards program built on Ethereum.
+
 1. Overview
-The HVAC Rewards Admin Portal is a web-based interface designed to manage a sophisticated, on-chain customer loyalty and rewards program. It provides a user-friendly layer that abstracts away the complexities of blockchain interactions, allowing an administrator to manage the entire customer rewards lifecycle through simple forms and button clicks.
+The HVAC Rewards Admin Portal is a web-based interface designed to manage a sophisticated, on-chain customer loyalty program. It provides a user-friendly layer that abstracts away the complexities of blockchain interactions, allowing an administrator to manage the entire customer rewards lifecycle through simple forms and button clicks.
 
 The system is built around a powerful concept: customers earn non-transferable points (SPN) for services, which can then be converted into a value-bearing token (SRV). This SRV token is then automatically staked to generate yield, which is ultimately paid out to the customer as a real-world reward (e.g., a gift card).
 
@@ -52,7 +54,7 @@ Off-Chain: Send the customer their real-world reward (e.g., a gift card for the 
 
 On-Chain: Click the "Claim Yield" button for that customer. This reconciles the books on the blockchain by executing the claim() function, which transfers the equivalent amount of RewardToken from the Yield Contract (likely to your treasury wallet) and resets the customer's pending rewards to zero.
 
-4. CRITICAL SECURITY NOTE
+4. 🚨 CRITICAL SECURITY NOTE 🚨
 This Admin Portal is a powerful demonstration and management tool. However, for security reasons, its current implementation of customer wallet management is for simulation purposes only and is NOT production-ready.
 
 In the code, when a new customer is added, a wallet is generated and its private key is stored in the browser's memory. This is done to allow the portal to automatically sign transactions on the customer's behalf for the "Convert & Stake" flow.
