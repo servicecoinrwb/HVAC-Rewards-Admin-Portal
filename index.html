@@ -14,8 +14,14 @@
         .btn {
             @apply inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-150 ease-in-out;
         }
+        .btn:disabled {
+            @apply bg-indigo-300 cursor-not-allowed;
+        }
         .btn-secondary {
-            @apply bg-gray-600 hover:bg-gray-700 focus:ring-gray-500;
+            @apply bg-gray-200 text-gray-700 hover:bg-gray-300 focus:ring-gray-400 border-gray-300;
+        }
+        .btn-secondary:disabled {
+            @apply bg-gray-100 text-gray-400 cursor-not-allowed;
         }
         .btn-green {
             @apply bg-green-600 hover:bg-green-700 focus:ring-green-500;
@@ -24,51 +30,51 @@
             @apply bg-red-600 hover:bg-red-700 focus:ring-red-500;
         }
         .input-field {
-            @apply block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm;
+            @apply block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm;
         }
         .card {
-            @apply bg-gray-800 shadow-lg rounded-lg p-6;
+            @apply bg-white border border-gray-200 shadow-sm rounded-lg p-6;
         }
         .table-header {
-            @apply px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider;
+            @apply px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50;
         }
         .table-cell {
-            @apply px-6 py-4 whitespace-nowrap text-sm text-gray-300;
+            @apply px-6 py-4 whitespace-nowrap text-sm text-gray-700;
         }
-        /* Custom scrollbar for better aesthetics in dark mode */
+        /* Custom scrollbar for better aesthetics in light mode */
         ::-webkit-scrollbar {
             width: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #1f2937; /* bg-gray-800 */
+            background: #f3f4f6; /* bg-gray-100 */
         }
         ::-webkit-scrollbar-thumb {
-            background: #4f46e5; /* bg-indigo-600 */
+            background: #a5b4fc; /* bg-indigo-300 */
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #4338ca; /* bg-indigo-700 */
+            background: #818cf8; /* bg-indigo-400 */
         }
     </style>
 </head>
-<body class="bg-gray-900 text-white">
+<body class="bg-gray-50 text-gray-800">
 
     <div class="container mx-auto p-4 md:p-8">
-        <header class="text-center mb-10">
-            <h1 class="text-4xl font-bold text-white">HVAC Rewards Admin Portal</h1>
-            <p class="text-lg text-gray-400 mt-2">Manage your on-chain customer loyalty program.</p>
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gray-900">HVAC Rewards Admin Portal</h1>
+            <p class="text-lg text-gray-600 mt-2">Manage your on-chain customer loyalty program.</p>
             <div id="connection-status" class="mt-4">
                 <button id="connect-wallet" class="btn">Connect Wallet</button>
-                <p id="wallet-info" class="hidden text-green-400"></p>
-                <p id="wallet-error" class="hidden text-red-400"></p>
+                <p id="wallet-info" class="hidden text-green-600 font-semibold"></p>
+                <p id="wallet-error" class="hidden text-red-600"></p>
             </div>
         </header>
 
         <main class="space-y-8">
             <!-- Configuration Section -->
             <section id="config-section" class="card">
-                <h2 class="text-2xl font-semibold mb-4 text-white">1. System Configuration</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <h2 class="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">1. System Configuration</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
                     <input type="text" id="spn-address" placeholder="SPN Token Address" class="input-field" value="0x29950E3186999F490777f00d97279a62b2dD1818">
                     <input type="text" id="converter-address" placeholder="Converter Address" class="input-field" value="0x524997F5Cf25537a275ad5D0A6A346c733a4fA41">
                     <input type="text" id="staking-address" placeholder="Staking Contract Address" class="input-field" value="0x691e29E98ECDc5ae948355F30102cD4D637eddB7">
@@ -83,43 +89,43 @@
             <!-- Admin Actions Section -->
             <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div id="customer-actions" class="card space-y-4">
-                    <h2 class="text-2xl font-semibold text-white">2. Customer Actions</h2>
+                    <h2 class="text-xl font-semibold text-gray-800 border-b pb-2">2. Customer Actions</h2>
                     <div>
-                        <label for="customer-number" class="block text-sm font-medium text-gray-300">Customer Number</label>
+                        <label for="customer-number" class="block text-sm font-medium text-gray-700">Customer Number *</label>
                         <input type="text" id="customer-number" placeholder="e.g., CUST-1001" class="input-field mt-1">
                     </div>
-                    <button id="add-customer" class="btn w-full">Add New Customer (Generates Wallet)</button>
+                     <div>
+                        <label for="wallet-address" class="block text-sm font-medium text-gray-700">Wallet Address (Optional)</label>
+                        <input type="text" id="wallet-address" placeholder="0x... (leave blank to generate new)" class="input-field mt-1">
+                    </div>
+                    <button id="add-customer" class="btn w-full">Add Customer</button>
 
-                    <div class="pt-4 border-t border-gray-700">
-                        <label for="spn-amount" class="block text-sm font-medium text-gray-300">SPN Amount to Issue</label>
+                    <div class="pt-4 border-t border-gray-200">
+                        <label for="spn-amount" class="block text-sm font-medium text-gray-700">SPN Amount to Issue</label>
                         <input type="number" id="spn-amount" placeholder="e.g., 500" class="input-field mt-1">
+                         <p class="text-xs text-gray-500 mt-1">Select customer by entering their number above.</p>
                         <button id="issue-spn" class="btn btn-green w-full mt-2">Issue SPN Points</button>
                     </div>
                 </div>
                 <div id="system-actions" class="card space-y-4">
-                     <h2 class="text-2xl font-semibold text-white">3. System & Payout</h2>
+                     <h2 class="text-xl font-semibold text-gray-800 border-b pb-2">3. Staking & Yield Management</h2>
                      <div>
-                        <label for="fund-amount" class="block text-sm font-medium text-gray-300">Amount to Fund Yield Contract</label>
+                        <label for="fund-amount" class="block text-sm font-medium text-gray-700">Amount to Fund Yield Contract</label>
                         <input type="number" id="fund-amount" placeholder="e.g., 1000" class="input-field mt-1">
                         <button id="fund-yield" class="btn btn-green w-full mt-2">Fund Yield Contract</button>
-                    </div>
-                     <div class="pt-4 border-t border-gray-700">
-                        <label for="apr-rate" class="block text-sm font-medium text-gray-300">New Base APR (in BPS, e.g., 500 for 5%)</label>
-                        <input type="number" id="apr-rate" placeholder="e.g., 500" class="input-field mt-1">
-                        <button id="set-apr" class="btn w-full mt-2">Update APR</button>
                     </div>
                 </div>
             </section>
             
             <!-- Customer Table Section -->
             <section id="customer-table-section" class="card">
-                <h2 class="text-2xl font-semibold mb-4 text-white">4. Customer Dashboard</h2>
-                <div class="flex justify-end mb-4">
-                    <button id="refresh-balances" class="btn btn-secondary">Refresh All Balances</button>
+                <div class="flex justify-between items-center border-b pb-2 mb-4">
+                    <h2 class="text-xl font-semibold text-gray-800">4. Customer Dashboard</h2>
+                    <button id="refresh-balances" class="btn btn-secondary text-sm">Refresh All</button>
                 </div>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-700">
-                        <thead class="bg-gray-800">
+                <div class="overflow-x-auto rounded-lg border border-gray-200">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
                             <tr>
                                 <th scope="col" class="table-header">Customer #</th>
                                 <th scope="col" class="table-header">Wallet Address</th>
@@ -130,7 +136,7 @@
                                 <th scope="col" class="table-header">Actions</th>
                             </tr>
                         </thead>
-                        <tbody id="customer-tbody" class="bg-gray-800 divide-y divide-gray-700">
+                        <tbody id="customer-tbody" class="bg-white divide-y divide-gray-200">
                             <!-- Rows will be dynamically inserted here -->
                         </tbody>
                     </table>
@@ -139,8 +145,8 @@
 
             <!-- Log Section -->
             <section id="log-section" class="card">
-                <h2 class="text-2xl font-semibold mb-4 text-white">Activity Log</h2>
-                <div id="log-output" class="bg-gray-900 rounded-md p-4 h-64 overflow-y-auto text-sm font-mono">
+                <h2 class="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">Activity Log</h2>
+                <div id="log-output" class="bg-gray-100 border border-gray-200 rounded-md p-4 h-64 overflow-y-auto text-sm font-mono">
                     <p class="text-gray-500">Waiting for actions...</p>
                 </div>
             </section>
@@ -169,10 +175,10 @@
         function log(message, isError = false) {
             const p = document.createElement('p');
             p.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
-            p.className = isError ? 'text-red-400' : 'text-green-400';
+            p.className = isError ? 'text-red-700' : 'text-green-700';
 
             const firstChild = logOutput.firstChild;
-            if (firstChild.textContent === 'Waiting for actions...') {
+            if (firstChild && firstChild.textContent === 'Waiting for actions...') {
                 logOutput.innerHTML = '';
             }
             logOutput.prepend(p);
@@ -204,42 +210,70 @@
         // --- Customer & Table Management ---
         function addCustomer() {
             const customerNumber = getAddress('customer-number');
+            const walletAddress = getAddress('wallet-address');
+
             if (!customerNumber) {
-                log('Please enter a customer number.', true);
+                log('Customer Number is required.', true);
                 return;
             }
             if (customers.find(c => c.customerNumber === customerNumber)) {
                 log('Customer number already exists.', true);
                 return;
             }
-            const wallet = ethers.Wallet.createRandom();
-            const newCustomer = {
-                customerNumber: customerNumber,
-                walletAddress: wallet.address,
-                privateKey: wallet.privateKey, // IMPORTANT: For simulation only. NEVER do this in production.
-                balances: { spn: '0', srv: '0', srev: '0', yield: '0' }
-            };
+
+            let newCustomer;
+
+            if (walletAddress) {
+                // Use provided wallet address
+                if (!ethers.utils.isAddress(walletAddress)) {
+                    log('Invalid Ethereum address provided.', true);
+                    return;
+                }
+                newCustomer = {
+                    customerNumber: customerNumber,
+                    walletAddress: walletAddress,
+                    privateKey: null, // No private key for external wallets
+                    balances: { spn: '0', srv: '0', srev: '0', yield: '0' }
+                };
+                log(`Added customer ${customerNumber} with existing wallet ${walletAddress}.`);
+            } else {
+                // Generate a new wallet
+                const wallet = ethers.Wallet.createRandom();
+                newCustomer = {
+                    customerNumber: customerNumber,
+                    walletAddress: wallet.address,
+                    privateKey: wallet.privateKey, // IMPORTANT: For simulation only. NEVER do this in production.
+                    balances: { spn: '0', srv: '0', srev: '0', yield: '0' }
+                };
+                log(`Added customer ${customerNumber} and generated new wallet ${wallet.address}. This is a simulation, key is stored locally.`);
+            }
+            
             customers.push(newCustomer);
-            log(`Added customer ${customerNumber} with wallet ${wallet.address}. This is a simulation, key is stored locally.`);
             renderTable();
             document.getElementById('customer-number').value = '';
+            document.getElementById('wallet-address').value = '';
         }
 
         function renderTable() {
             const tbody = document.getElementById('customer-tbody');
             tbody.innerHTML = '';
+            if (customers.length === 0) {
+                 tbody.innerHTML = `<tr><td colspan="7" class="text-center py-10 text-gray-500">No customers added yet.</td></tr>`;
+                 return;
+            }
             customers.forEach(customer => {
+                const isManaged = !!customer.privateKey;
                 const row = `
-                    <tr>
+                    <tr class="hover:bg-gray-50">
                         <td class="table-cell font-mono">${customer.customerNumber}</td>
                         <td class="table-cell font-mono text-xs">${customer.walletAddress}</td>
                         <td class="table-cell" id="spn-${customer.walletAddress}">${customer.balances.spn}</td>
                         <td class="table-cell" id="srv-${customer.walletAddress}">${customer.balances.srv}</td>
                         <td class="table-cell" id="srev-${customer.walletAddress}">${customer.balances.srev}</td>
-                        <td class="table-cell" id="yield-${customer.walletAddress}">${customer.balances.yield}</td>
+                        <td class="table-cell font-semibold text-green-600" id="yield-${customer.walletAddress}">${customer.balances.yield}</td>
                         <td class="table-cell space-x-2">
-                            <button class="btn btn-sm text-xs" onclick="convertAndStake('${customer.walletAddress}')">Convert & Stake</button>
-                            <button class="btn btn-sm btn-red text-xs" onclick="claimYield('${customer.walletAddress}')">Claim Yield</button>
+                            <button class="btn btn-sm text-xs" onclick="convertAndStake('${customer.walletAddress}')" ${!isManaged ? 'disabled title="Portal can only automate staking for generated wallets."' : ''}>Convert & Stake</button>
+                            <button class="btn btn-sm btn-red text-xs" onclick="claimYield('${customer.walletAddress}')" ${!isManaged ? 'disabled title="Portal can only automate claims for generated wallets."' : ''}>Claim Yield</button>
                         </td>
                     </tr>
                 `;
@@ -321,11 +355,15 @@
                 ]);
 
                 const customer = findCustomerByWallet(walletAddress);
+                if (!customer) return;
+
+                const format = (val, dec) => parseFloat(ethers.utils.formatUnits(val, dec)).toFixed(4);
+
                 customer.balances = {
-                    spn: ethers.utils.formatUnits(spnBal, spnDec),
-                    srv: ethers.utils.formatUnits(srvBal, srvDec),
-                    srev: ethers.utils.formatUnits(srevBal, srevDec),
-                    yield: ethers.utils.formatUnits(yieldPending, yieldDec)
+                    spn: format(spnBal, spnDec),
+                    srv: format(srvBal, srvDec),
+                    srev: format(srevBal, srevDec),
+                    yield: format(yieldPending, yieldDec)
                 };
                 
                 document.getElementById(`spn-${walletAddress}`).textContent = customer.balances.spn;
@@ -333,23 +371,23 @@
                 document.getElementById(`srev-${walletAddress}`).textContent = customer.balances.srev;
                 document.getElementById(`yield-${walletAddress}`).textContent = customer.balances.yield;
                 
-                log(`Updated balances for ${walletAddress.substring(0, 6)}...`);
             } catch (error) {
-                log(`Failed to update balances for ${walletAddress}: ${error.message}`, true);
+                log(`Failed to update balances for ${walletAddress.substring(0,6)}...: ${error.message}`, true);
             }
         }
 
         async function issueSpn() {
+            if (!signer) { log('Please connect wallet first.', true); return; }
             const customerNumber = getAddress('customer-number');
             const amount = document.getElementById('spn-amount').value;
             if (!customerNumber || !amount) {
-                log('Please select a customer and enter an amount.', true);
+                log('Please enter a customer number and SPN amount.', true);
                 return;
             }
 
             const customer = customers.find(c => c.customerNumber === customerNumber);
             if (!customer) {
-                log('Customer not found.', true);
+                log('Customer not found. Please add the customer first.', true);
                 return;
             }
 
@@ -365,15 +403,18 @@
         }
         
         async function convertAndStake(walletAddress) {
+            if (!provider) { log('Please connect wallet first.', true); return; }
             log(`Starting Convert & Stake process for ${walletAddress.substring(0, 6)}...`);
             const customer = findCustomerByWallet(walletAddress);
             if (!customer) {
                 log('Customer not found.', true);
                 return;
             }
+            if (!customer.privateKey) {
+                log('Cannot automate staking for externally provided wallets.', true);
+                return;
+            }
 
-            // In a real app, the user signs these txs. Here, we simulate it with the private key.
-            // This is NOT secure for production. It demonstrates the flow.
             const customerSigner = new ethers.Wallet(customer.privateKey, provider);
 
             const spnContract = new ethers.Contract(getAddress('spn-address'), erc20Abi, customerSigner);
@@ -381,7 +422,6 @@
             const converterContract = new ethers.Contract(getAddress('converter-address'), converterAbi, customerSigner);
             const stakingContract = new ethers.Contract(getAddress('staking-address'), stakingAbi, customerSigner);
             
-            // 1. Approve Converter to spend SPN
             const spnBalance = await spnContract.balanceOf(walletAddress);
             if(spnBalance.isZero()){
                 log('Customer has no SPN to convert.', true);
@@ -389,23 +429,18 @@
             }
             log(`Step 1: Approving Converter to spend ${ethers.utils.formatUnits(spnBalance, await spnContract.decimals())} SPN...`);
             let success = await handleTx(
-                spnContract.approve(converterContract.address, spnBalance),
-                `SPN approved for Converter.`
+                spnContract.approve(converterContract.address, spnBalance), `SPN approved for Converter.`
             );
             if (!success) return;
 
-            // 2. Burn and Convert
             log(`Step 2: Calling burnAndConvert...`);
             success = await handleTx(
-                converterContract.burnAndConvert(spnBalance),
-                `SPN converted to SRV.`
+                converterContract.burnAndConvert(spnBalance), `SPN converted to SRV.`
             );
             if (!success) return;
 
-            // Wait a moment for balance update
             await new Promise(resolve => setTimeout(resolve, 2000));
 
-            // 3. Approve Staking contract to spend SRV
             const srvBalance = await srvContract.balanceOf(walletAddress);
             if(srvBalance.isZero()){
                 log('Conversion resulted in zero SRV. Cannot stake.', true);
@@ -414,44 +449,44 @@
             }
             log(`Step 3: Approving Staking contract to spend ${ethers.utils.formatUnits(srvBalance, await srvContract.decimals())} SRV...`);
             success = await handleTx(
-                srvContract.approve(stakingContract.address, srvBalance),
-                `SRV approved for Staking.`
+                srvContract.approve(stakingContract.address, srvBalance), `SRV approved for Staking.`
             );
             if (!success) return;
 
-            // 4. Stake SRV
             log(`Step 4: Calling stake...`);
             success = await handleTx(
-                stakingContract.stake(srvBalance),
-                `SRV staked successfully!`
+                stakingContract.stake(srvBalance), `SRV staked successfully!`
             );
 
             if(success) await updateAllBalances(walletAddress);
         }
         
         async function claimYield(walletAddress) {
+            if (!provider) { log('Please connect wallet first.', true); return; }
             log(`Claiming yield for ${walletAddress.substring(0, 6)}...`);
             const customer = findCustomerByWallet(walletAddress);
              if (!customer) {
                 log('Customer not found.', true);
                 return;
             }
+            if (!customer.privateKey) {
+                log('Cannot automate claims for externally provided wallets.', true);
+                return;
+            }
 
             const customerSigner = new ethers.Wallet(customer.privateKey, provider);
             const yieldContract = new ethers.Contract(getAddress('yield-address'), yieldAbi, customerSigner);
             
-            // This represents the on-chain part of your payout process.
-            // After sending the gift card, you call this to reconcile.
             log('This action simulates claiming the on-chain yield to the customer wallet after an off-chain payout.');
             const success = await handleTx(
-                yieldContract.claim(),
-                `Yield claimed for ${customer.customerNumber}.`
+                yieldContract.claim(), `Yield claimed for ${customer.customerNumber}.`
             );
 
             if(success) await updateAllBalances(walletAddress);
         }
 
         async function fundYield() {
+            if (!signer) { log('Please connect wallet first.', true); return; }
             const amount = document.getElementById('fund-amount').value;
             const rewardTokenAddress = getAddress('reward-token-address');
             const yieldAddress = getAddress('yield-address');
@@ -468,38 +503,22 @@
             
             log(`Approving yield contract to spend ${amount} reward tokens...`);
             let success = await handleTx(
-                rewardTokenContract.approve(yieldAddress, amountWei),
-                `Approval successful.`
+                rewardTokenContract.approve(yieldAddress, amountWei), `Approval successful.`
             );
             if (!success) return;
             
             log(`Funding yield contract with ${amount} reward tokens...`);
-            success = await handleTx(
-                yieldContract.fund(amountWei),
-                `Yield contract funded successfully.`
+            await handleTx(
+                yieldContract.fund(amountWei), `Yield contract funded successfully.`
             );
         }
         
-        async function setApr() {
-            const apr = document.getElementById('apr-rate').value;
-            if (!apr) {
-                log('Please provide an APR value.', true);
-                return;
-            }
-            const yieldContract = new ethers.Contract(getAddress('yield-address'), yieldAbi, signer);
-            await handleTx(
-                yieldContract.setBaseAPR(apr),
-                `Base APR updated to ${apr} BPS.`
-            );
-        }
-
         // --- Event Listeners ---
         connectButton.addEventListener('click', connectWallet);
         document.getElementById('add-customer').addEventListener('click', addCustomer);
         document.getElementById('issue-spn').addEventListener('click', issueSpn);
         document.getElementById('refresh-balances').addEventListener('click', refreshAllBalances);
         document.getElementById('fund-yield').addEventListener('click', fundYield);
-        document.getElementById('set-apr').addEventListener('click', setApr);
 
         // --- Initial Load ---
         renderTable();
