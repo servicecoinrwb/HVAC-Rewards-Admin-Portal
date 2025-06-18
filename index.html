@@ -208,6 +208,18 @@
         }
         logOutput.prepend(p);
     }
+    
+    function saveCustomers() {
+        localStorage.setItem('hvacCustomers', JSON.stringify(customers));
+    }
+
+    function loadCustomers() {
+        const storedCustomers = localStorage.getItem('hvacCustomers');
+        if (storedCustomers) {
+            customers = JSON.parse(storedCustomers);
+            log('Loaded customer data from previous session.');
+        }
+    }
 
     async function handleTx(txPromise, successMessage) {
         try {
@@ -253,6 +265,7 @@
         };
         
         customers.push(newCustomer);
+        saveCustomers(); // Save to localStorage
         log(`Added customer ${customerNumber}. Wallet must be managed by your secure backend.`);
         renderTable();
         document.getElementById('customer-number').value = '';
@@ -300,7 +313,8 @@
             connectButton.disabled = true;
             walletError.classList.add('hidden');
             log(`Admin wallet ${adminAddress} connected.`);
-            fetchContractAddresses();
+            await fetchContractAddresses();
+            await refreshAllBalances(); // Refresh balances for loaded customers
         } catch (error) {
             log('Failed to connect wallet.', true);
             walletError.textContent = `Connection failed: ${error.message}`;
@@ -471,7 +485,6 @@
 
             const format = (val, dec) => parseFloat(ethers.utils.formatUnits(val, dec)).toFixed(6);
             
-            // The pending yield from the contract is scaled by 1e18, so we format it with 18 decimals.
             const formattedYield = parseFloat(ethers.utils.formatUnits(yieldPending, 18)).toFixed(6);
 
             customer.balances = {
@@ -481,10 +494,10 @@
                 yield: formattedYield
             };
             
-            document.getElementById(`spn-${walletAddress}`).textContent = customer.balances.spn;
-            document.getElementById(`srv-${walletAddress}`).textContent = customer.balances.srv;
+            document.getElementById(`spn-${customer.walletAddress}`).textContent = customer.balances.spn;
+            document.getElementById(`srv-${customer.walletAddress}`).textContent = customer.balances.srv;
             document.getElementById(`srev-${customer.walletAddress}`).textContent = customer.balances.srev;
-            document.getElementById(`yield-${walletAddress}`).textContent = customer.balances.yield;
+            document.getElementById(`yield-${customer.walletAddress}`).textContent = customer.balances.yield;
                 
         } catch (error) {
             log(`Failed to update balances for ${walletAddress.substring(0,6)}...: ${error.message}`, true);
@@ -501,6 +514,7 @@
     document.getElementById('stake-srv').addEventListener('click', stakeSrv);
 
     // --- Initial Load ---
+    loadCustomers();
     renderTable();
 
   </script>
