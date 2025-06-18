@@ -291,6 +291,7 @@
     }
 
     async function fetchContractAddresses() {
+        if (!provider) { log("Connect wallet first.", true); return; }
         log('Fetching dependent contract addresses...');
         try {
             const converterAddress = getAddress('converter-address');
@@ -393,27 +394,19 @@
 
     async function updateCustomerBalance(walletAddress) {
         try {
-            const spnContract = new ethers.Contract(getAddress('spn-address'), erc20Abi, provider);
-            
-            const converterAddress = getAddress('converter-address');
-            if (!ethers.utils.isAddress(converterAddress)) return;
-            const converterContract = new ethers.Contract(converterAddress, converterAbi, provider);
-            const srvAddress = await converterContract.srv();
-            if (!ethers.utils.isAddress(srvAddress)) return;
-            const srvContract = new ethers.Contract(srvAddress, erc20Abi, provider);
+            const srvAddress = getAddress('srv-address');
+            const srevAddress = getAddress('srev-address');
+            const rewardTokenAddress = getAddress('reward-token-address');
 
-            const stakingAddress = getAddress('staking-address');
-            if (!ethers.utils.isAddress(stakingAddress)) return;
-            const stakingContract = new ethers.Contract(stakingAddress, stakingAbi, provider);
-            const srevAddress = await stakingContract.SREV();
-             if (!ethers.utils.isAddress(srevAddress)) return;
+            if (!ethers.utils.isAddress(srvAddress) || !ethers.utils.isAddress(srevAddress) || !ethers.utils.isAddress(rewardTokenAddress)) {
+                log('Dependent token addresses not found. Please connect wallet to fetch them.', true);
+                return;
+            }
+
+            const spnContract = new ethers.Contract(getAddress('spn-address'), erc20Abi, provider);
+            const srvContract = new ethers.Contract(srvAddress, erc20Abi, provider);
             const srevContract = new ethers.Contract(srevAddress, erc20Abi, provider);
-            
-            const yieldAddress = getAddress('yield-address');
-            if (!ethers.utils.isAddress(yieldAddress)) return;
-            const yieldContract = new ethers.Contract(yieldAddress, yieldAbi, provider);
-            const rewardTokenAddress = await yieldContract.rewardToken();
-             if (!ethers.utils.isAddress(rewardTokenAddress)) return;
+            const yieldContract = new ethers.Contract(getAddress('yield-address'), yieldAbi, provider);
             const rewardTokenContract = new ethers.Contract(rewardTokenAddress, erc20Abi, provider);
 
             const [spnBal, srvBal, srevBal, yieldPending, spnDec, srvDec, srevDec, yieldDec] = await Promise.all([
@@ -461,4 +454,4 @@
 
   </script>
 </body>
-</ht
+</html>
