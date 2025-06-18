@@ -54,12 +54,13 @@ Off-Chain: Send the customer their real-world reward (e.g., a gift card for the 
 
 On-Chain: Click the "Claim Yield" button for that customer. This reconciles the books on the blockchain by executing the claim() function, which transfers the equivalent amount of RewardToken from the Yield Contract (likely to your treasury wallet) and resets the customer's pending rewards to zero.
 
-4. 🚨 CRITICAL SECURITY NOTE 🚨
+🚨 CRITICAL SECURITY NOTE 🚨
 This Admin Portal is a powerful demonstration and management tool. However, for security reasons, its current implementation of customer wallet management is for simulation purposes only and is NOT production-ready.
 
 In the code, when a new customer is added, a wallet is generated and its private key is stored in the browser's memory. This is done to allow the portal to automatically sign transactions on the customer's behalf for the "Convert & Stake" flow.
 
-In a real-world, production environment, you must NEVER store or handle user private keys directly. The architecture should be transitioned to a secure backend system:
+In a real-world, production environment, you must NEVER store or handle user private keys directly.
+The architecture should be transitioned to a secure backend system:
 
 Wallet Management: A secure server should be responsible for creating and storing customer wallets, using a proper secrets management solution like AWS KMS, Google Cloud KMS, or HashiCorp Vault.
 
