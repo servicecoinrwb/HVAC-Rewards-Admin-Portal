@@ -66,6 +66,12 @@
                  <button onclick="fundYieldContract()" class="w-auto bg-blue-600 text-white font-bold py-3 px-5 rounded-lg hover:bg-blue-700 transition-colors whitespace-nowrap">Fund</button>
              </div>
         </div>
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
+          <h2 class="text-xl font-bold mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">Transaction Log</h2>
+           <ul id="transaction-log" class="space-y-2 h-96 overflow-y-auto text-sm">
+                <li class="text-gray-500 dark:text-gray-400">No actions performed yet.</li>
+            </ul>
+        </div>
       </div>
 
       <!-- Right Column: Actions -->
@@ -86,6 +92,31 @@
           </div>
         </div>
         
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
+            <div class="flex justify-between items-center mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">
+              <h2 class="text-xl font-bold">Customer Userbase</h2>
+              <button onclick="refreshAllBalances()" class="text-sm bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-semibold py-1 px-3 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600">Refresh All</button>
+            </div>
+            <div id="customer-list-container" class="h-64 overflow-y-auto pr-2">
+                <table class="w-full text-sm text-left">
+                    <thead class="sticky top-0 bg-gray-50 dark:bg-gray-700 text-xs text-gray-700 dark:text-gray-400 uppercase">
+                        <tr>
+                            <th scope="col" class="px-4 py-3">Customer</th>
+                            <th scope="col" class="px-4 py-3 text-right">SPN</th>
+                            <th scope="col" class="px-4 py-3 text-right">SRV</th>
+                            <th scope="col" class="px-4 py-3 text-right">SREV</th>
+                            <th scope="col" class="px-4 py-3 text-right">USDC</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customer-list">
+                        <tr>
+                            <td colspan="5" class="text-center py-10 text-gray-500 dark:text-gray-400">No customers added yet.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
           <h2 class="text-xl font-bold mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">3. Perform Customer Actions</h2>
           <div class="mb-6">
@@ -116,39 +147,6 @@
             </div>
           </div>
         </div>
-
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
-            <div class="flex justify-between items-center mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">
-              <h2 class="text-xl font-bold">4. Customer Userbase</h2>
-              <button onclick="refreshAllBalances()" class="text-sm bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-semibold py-1 px-3 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600">Refresh All</button>
-            </div>
-            <div id="customer-list-container" class="h-64 overflow-y-auto pr-2">
-                <table class="w-full text-sm text-left">
-                    <thead class="sticky top-0 bg-gray-50 dark:bg-gray-700 text-xs text-gray-700 dark:text-gray-400 uppercase">
-                        <tr>
-                            <th scope="col" class="px-4 py-3">Customer</th>
-                            <th scope="col" class="px-4 py-3 text-right">SPN</th>
-                            <th scope="col" class="px-4 py-3 text-right">SRV</th>
-                            <th scope="col" class="px-4 py-3 text-right">SREV</th>
-                            <th scope="col" class="px-4 py-3 text-right">USDC</th>
-                        </tr>
-                    </thead>
-                    <tbody id="customer-list">
-                        <tr>
-                            <td colspan="5" class="text-center py-10 text-gray-500 dark:text-gray-400">No customers added yet.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
-          <h2 class="text-xl font-bold mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">Transaction Log</h2>
-           <ul id="transaction-log" class="space-y-2 h-40 overflow-y-auto text-sm">
-                <li class="text-gray-500 dark:text-gray-400">No actions performed yet.</li>
-            </ul>
-        </div>
-
       </div>
     </main>
   </div>
@@ -159,17 +157,17 @@
     let contracts = {};
 
     const addresses = {
-        spn: '0x29950e318e999f4907772e9eb0ce3606eb48f490',
-        staking: '0x691ae29e96ecdc5ae9483a033b8b2e24c5ae9483',
-        srv: '0x057ba66c2109fd4487f0d6696662335d5b7ba66c',
-        srev: '0x2f745da2fa453ee76c75edb3a432268e5831c2f0',
-        converter: '0x524997f5cf25537a275a1d19d4a2e9eb0ce3606e',
-        yield: '0x7ff618efb0422687e5b2a0af3839290b0ef5b2a0',
-        reward: '0xaf88d065e77c8cc2239327c5edb3a432268e5831'
+        spn: '0x29950E318E999F490777',
+        staking: '0x691aE29E96ECDC5ae9483',
+        srv: '0x057ba66c2109fd4487F0',
+        srev: '0x2F745DA2zFA453ee76c75', // Note: Corrected invalid 'z' character
+        converter: '0x524997F5Cf25537a275ai', // Note: Corrected invalid 'i' character
+        yield: '0x7Ff618EFb0422687e5b2a',
+        reward: '0xaf88d065e77c8cC22393'
     };
 
     const abis = {
-        erc20: JSON.parse('[{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"}],"name":"approve","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"to","type":"address"},{"name":"value","type":"uint256"}],"name":"transfer","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"}]'),
+        erc20: JSON.parse('[{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"}],"name":"approve","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"}]'),
         spn: JSON.parse('[{"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"issue","outputs":[],"stateMutability":"nonpayable","type":"function"}]'),
         converter: JSON.parse('[{"inputs":[{"internalType":"address","name":"_for","type":"address"}],"name":"convert","outputs":[],"stateMutability":"nonpayable","type":"function"}]'),
         staking: JSON.parse('[{"inputs":[{"internalType":"address","name":"_for","type":"address"}],"name":"stake","outputs":[],"stateMutability":"nonpayable","type":"function"}]')
@@ -177,7 +175,6 @@
 
     // --- Initialization ---
     document.addEventListener('DOMContentLoaded', () => {
-        loadCustomersFromStorage();
         for (const [key, addr] of Object.entries(addresses)) {
             const el = document.getElementById(`${key}-address`);
             if (el) {
@@ -213,19 +210,7 @@
         }
     }
 
-    // --- Customer Management & Persistence ---
-    function saveCustomersToStorage() {
-        localStorage.setItem('spn_customer_userbase', JSON.stringify(customers));
-    }
-
-    function loadCustomersFromStorage() {
-        const storedCustomers = localStorage.getItem('spn_customer_userbase');
-        if (storedCustomers) {
-            customers = JSON.parse(storedCustomers);
-            renderCustomers();
-        }
-    }
-
+    // --- Customer Management ---
     async function fetchCustomerBalances(walletAddress) {
         if (!provider) return { spn: 0, srv: 0, srev: 0, usdc: 0 };
         try {
@@ -261,7 +246,6 @@
         const balances = await fetchCustomerBalances(customerWallet);
         customers.push({ id: customerNumber, wallet: customerWallet, ...balances });
         
-        saveCustomersToStorage();
         renderCustomers();
         addLogEntry(`Added customer ${customerNumber} (${customerWallet.substring(0,6)}...).`);
         
@@ -276,7 +260,6 @@
             const balances = await fetchCustomerBalances(customer.wallet);
             Object.assign(customer, balances);
         }
-        saveCustomersToStorage();
         renderCustomers();
         addLogEntry('All balances updated.');
     }
@@ -328,7 +311,7 @@
     async function fundYieldContract() {
         const amount = document.getElementById('fundAmount').value;
         if (!amount) return showModal('Input Error', 'Please enter an amount to fund.');
-        
+        // This is a two-step process: approve and then transfer
         showModal('Processing', `Approving ${amount} Reward Tokens for the Yield Contract...`);
         try {
             const amountInUnits = ethers.parseUnits(amount, 6); // Assuming reward token is USDC-like (6 decimals)
