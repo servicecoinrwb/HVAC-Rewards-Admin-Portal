@@ -137,11 +137,12 @@
                             <th scope="col" class="px-4 py-3 text-right">SRV</th>
                             <th scope="col" class="px-4 py-3 text-right">SREV</th>
                             <th scope="col" class="px-4 py-3 text-right">USDC</th>
+                            <th scope="col" class="px-4 py-3 text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="customer-list-body">
                         <tr>
-                            <td colspan="5" class="text-center py-10 text-gray-500 dark:text-gray-400">No customers added yet.</td>
+                            <td colspan="6" class="text-center py-10 text-gray-500 dark:text-gray-400">No customers added yet.</td>
                         </tr>
                     </tbody>
                 </table>
@@ -287,11 +288,18 @@
         renderCustomers();
         addLogEntry('All balances updated.');
     }
+    
+    function deleteCustomer(walletAddress) {
+        customers = customers.filter(c => c.wallet.toLowerCase() !== walletAddress.toLowerCase());
+        saveCustomersToStorage();
+        renderCustomers();
+        addLogEntry(`Removed customer ${walletAddress.substring(0,6)}...`);
+    }
 
     function renderCustomers() {
         const customerListBody = document.getElementById('customer-list-body');
         if (customers.length === 0) {
-            customerListBody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-gray-500 dark:text-gray-400">No customers added yet.</td></tr>`;
+            customerListBody.innerHTML = `<tr><td colspan="6" class="text-center py-10 text-gray-500 dark:text-gray-400">No customers added yet.</td></tr>`;
             return;
         }
         customerListBody.innerHTML = '';
@@ -301,12 +309,13 @@
             tr.innerHTML = `
                 <td class="px-4 py-3">
                     <p class="font-semibold text-sm text-gray-900 dark:text-gray-100">${customer.id}</p>
-                    <p class="text-xs font-mono text-gray-500 dark:text-gray-400">${customer.wallet.substring(0,6)}...${customer.wallet.substring(38)}</p>
+                    <a href="https://arbiscan.io/address/${customer.wallet}" target="_blank" class="text-xs font-mono text-blue-400 hover:underline">${customer.wallet}</a>
                 </td>
                 <td class="px-4 py-3 text-right font-mono">${typeof customer.spn === 'number' ? customer.spn.toLocaleString() : customer.spn}</td>
                 <td class="px-4 py-3 text-right font-mono">${typeof customer.srv === 'number' ? customer.srv.toLocaleString() : customer.srv}</td>
                 <td class="px-4 py-3 text-right font-mono">${typeof customer.srev === 'number' ? customer.srev.toLocaleString() : customer.srev}</td>
                 <td class="px-4 py-3 text-right font-mono">$${typeof customer.usdc === 'number' ? customer.usdc.toFixed(2) : customer.usdc}</td>
+                <td class="px-4 py-3 text-right"><button onclick="deleteCustomer('${customer.wallet}')" class="text-red-500 hover:text-red-700 font-bold">X</button></td>
             `;
             customerListBody.appendChild(tr);
         });
@@ -369,7 +378,7 @@
     // --- Logging ---
     function addLogEntry(message) {
         const logList = document.getElementById('transaction-log');
-        if (logList.children.length === 1 && logList.children[0].innerText.startsWith('No actions')) {
+        if (logList.children.length > 0 && logList.children[0].innerText.startsWith('No actions')) {
             logList.innerHTML = '';
         }
         
@@ -402,6 +411,17 @@
         `;
         document.body.appendChild(modal);
     }
+    
+    // --- Expose functions to global scope for HTML onclick handlers ---
+    window.connectWallet = connectWallet;
+    window.addCustomer = addCustomer;
+    window.refreshAllBalances = refreshAllBalances;
+    window.deleteCustomer = deleteCustomer;
+    window.issueSPN = issueSPN;
+    window.convertToSRV = convertToSRV;
+    window.stakeSRV = stakeSRV;
+    window.fundYieldContract = fundYieldContract;
+
   </script>
 </body>
 </html>
