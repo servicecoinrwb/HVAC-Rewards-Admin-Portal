@@ -59,6 +59,12 @@
             <div class="flex justify-between items-center"><span class="font-semibold text-gray-600 dark:text-gray-400">Reward Token:</span><a id="reward-address" href="#" target="_blank" class="font-mono text-blue-500 hover:underline external-link"></a></div>
           </div>
         </div>
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
+          <h2 class="text-xl font-bold mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">Transaction Log</h2>
+           <ul id="transaction-log" class="space-y-2 h-96 overflow-y-auto text-sm">
+                <li class="text-gray-500 dark:text-gray-400">No actions performed yet.</li>
+            </ul>
+        </div>
       </div>
 
       <!-- Right Column: Actions -->
@@ -80,17 +86,32 @@
         </div>
         
         <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
-          <h2 class="text-xl font-bold mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">3. Admin Actions: Issue Tokens</h2>
+          <h2 class="text-xl font-bold mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">3. Perform Customer Actions</h2>
           <div class="mb-6">
             <label for="targetCustomer" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Target Customer Wallet Address</label>
-            <input type="text" id="targetCustomer" placeholder="Enter wallet address to issue tokens to" class="mt-1 block w-full bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 p-3">
+            <input type="text" id="targetCustomer" placeholder="Enter wallet address to perform actions on" class="mt-1 block w-full bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 p-3">
           </div>
           
-          <div>
-            <h3 class="font-semibold text-lg mb-2">Issue SPN (Points)</h3>
-            <div class="flex items-center gap-3">
-               <input id="issueAmount" type="number" placeholder="e.g. 500" class="block w-full bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 p-3">
-               <button onclick="issueSPN()" class="bg-green-600 text-white font-bold py-3 px-5 rounded-lg hover:bg-green-700 transition-colors whitespace-nowrap">Issue SPN</button>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+              <h3 class="font-semibold text-lg mb-2">Issue Points</h3>
+              <div class="flex items-center gap-3">
+                 <input id="issueAmount" type="number" placeholder="e.g. 500" class="block w-full bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 p-3">
+                 <button onclick="issueSPN()" class="bg-green-600 text-white font-bold py-3 px-5 rounded-lg hover:bg-green-700 transition-colors whitespace-nowrap">Issue SPN</button>
+              </div>
+            </div>
+            
+            <div class="space-y-4">
+               <div>
+                  <h3 class="font-semibold text-lg">Convert SPN to SRV</h3>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Converts entire SPN balance.</p>
+                  <button onclick="convertToSRV()" class="w-full bg-yellow-500 text-black font-bold py-3 px-4 rounded-lg hover:bg-yellow-600 transition-colors">Convert</button>
+               </div>
+                <div>
+                  <h3 class="font-semibold text-lg">Stake SRV</h3>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Stakes entire SRV balance.</p>
+                  <button onclick="stakeSRV()" class="w-full bg-purple-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-purple-700 transition-colors">Stake</button>
+               </div>
             </div>
           </div>
         </div>
@@ -109,11 +130,12 @@
                             <th scope="col" class="px-4 py-3 text-right">SRV</th>
                             <th scope="col" class="px-4 py-3 text-right">SREV</th>
                             <th scope="col" class="px-4 py-3 text-right">USDC</th>
+                            <th scope="col" class="px-4 py-3 text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="customer-list-body">
                         <tr>
-                            <td colspan="5" class="text-center py-10 text-gray-500 dark:text-gray-400">No customers added yet.</td>
+                            <td colspan="6" class="text-center py-10 text-gray-500 dark:text-gray-400">No customers added yet.</td>
                         </tr>
                     </tbody>
                 </table>
@@ -129,12 +151,12 @@
     let contracts = {};
 
     const addresses = {
-        spn: '0x29950E3186999F490777f00d97279a62b2dD1818',
-        staking: '0x691e29E98ECDc5ae948355F30102cD4D637eddB7',
-        srv: '0x057ba66c2109Fd4487F0781E0203B71fd77a6341',
-        srev: '0x2F745Da2FA453ee76c756fADcc081f59284B2a40',
-        converter: '0x524997F5Cf25537a275ad5D0A6A346c733a4fA41',
-        yield: '0x71f618EFb0422687e5B2ad9cD973aDACb645D9DE',
+        spn: '0x29950e318e999f4907772e9eb0ce3606eb48f490',
+        staking: '0x691ae29e96ecdc5ae9483a033b8b2e24c5ae9483',
+        srv: '0x057ba66c2109fd4487f0d6696662335d5b7ba66c',
+        srev: '0x2f745da2fa453ee76c75edb3a432268e5831c2f0',
+        converter: '0x524997f5cf25537a275a1d19d4a2e9eb0ce3606e',
+        yield: '0x7ff618efb0422687e5b2a0af3839290b0ef5b2a0',
         reward: '0xaf88d065e77c8cc2239327c5edb3a432268e5831'
     };
 
