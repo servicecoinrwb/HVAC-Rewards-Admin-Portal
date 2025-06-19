@@ -91,41 +91,61 @@
              <button onclick="addCustomer()" class="w-full md:w-auto bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors">Add Customer</button>
           </div>
         </div>
+
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
+            <h2 class="text-xl font-bold mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">3. Admin Token Issuance</h2>
+            <div class="space-y-4">
+                <div>
+                    <h3 class="font-semibold text-lg mb-2">Mint SPN (Points)</h3>
+                    <div class="flex items-center gap-3">
+                        <input id="mintSpnTarget" type="text" placeholder="Target Address" class="block w-full bg-gray-100 dark:bg-gray-700 rounded-lg p-3">
+                        <input id="mintSpnAmount" type="number" placeholder="e.g. 500" class="block w-full bg-gray-100 dark:bg-gray-700 rounded-lg p-3">
+                        <button onclick="issueSPN()" class="bg-green-600 text-white font-bold py-3 px-5 rounded-lg hover:bg-green-700 transition-colors whitespace-nowrap">Mint SPN</button>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-lg mb-2">Mint SRV</h3>
+                     <div class="flex items-center gap-3">
+                        <input id="mintSrvTarget" type="text" placeholder="Target Address" class="block w-full bg-gray-100 dark:bg-gray-700 rounded-lg p-3">
+                        <input id="mintSrvAmount" type="number" placeholder="SRV Amount" class="block w-full bg-gray-100 dark:bg-gray-700 rounded-lg p-3">
+                        <button onclick="mintSRV()" class="bg-cyan-600 text-white font-bold py-3 px-5 rounded-lg whitespace-nowrap">Mint SRV</button>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-lg mb-2">Mint SREV</h3>
+                     <div class="flex items-center gap-3">
+                        <input id="mintSrevTarget" type="text" placeholder="Target Address" class="block w-full bg-gray-100 dark:bg-gray-700 rounded-lg p-3">
+                        <input id="mintSrevAmount" type="number" placeholder="SREV Amount" class="block w-full bg-gray-100 dark:bg-gray-700 rounded-lg p-3">
+                        <button onclick="mintSREV()" class="bg-teal-600 text-white font-bold py-3 px-5 rounded-lg whitespace-nowrap">Mint SREV</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         
         <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
-          <h2 class="text-xl font-bold mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">3. Perform Customer Actions</h2>
+          <h2 class="text-xl font-bold mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">4. Perform Customer Actions</h2>
           <div class="mb-6">
             <label for="targetCustomer" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Target Customer Wallet Address</label>
-            <input type="text" id="targetCustomer" placeholder="Enter wallet address to perform actions on" class="mt-1 block w-full bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 p-3">
+            <input type="text" id="targetCustomer" placeholder="Enter wallet address from userbase list" class="mt-1 block w-full bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 p-3">
           </div>
           
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
-              <h3 class="font-semibold text-lg mb-2">Issue Points</h3>
-              <div class="flex items-center gap-3">
-                 <input id="issueAmount" type="number" placeholder="e.g. 500" class="block w-full bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 p-3">
-                 <button onclick="issueSPN()" class="bg-green-600 text-white font-bold py-3 px-5 rounded-lg hover:bg-green-700 transition-colors whitespace-nowrap">Issue SPN</button>
-              </div>
-            </div>
-            
-            <div class="space-y-4">
                <div>
                   <h3 class="font-semibold text-lg">Convert SPN to SRV</h3>
-                  <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Converts entire SPN balance.</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Converts entire SPN balance for target.</p>
                   <button onclick="convertToSRV()" class="w-full bg-yellow-500 text-black font-bold py-3 px-4 rounded-lg hover:bg-yellow-600 transition-colors">Convert</button>
                </div>
                 <div>
                   <h3 class="font-semibold text-lg">Stake SRV</h3>
-                  <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Stakes entire SRV balance.</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Stakes entire SRV balance for target.</p>
                   <button onclick="stakeSRV()" class="w-full bg-purple-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-purple-700 transition-colors">Stake</button>
                </div>
-            </div>
           </div>
         </div>
 
         <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
             <div class="flex justify-between items-center mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">
-              <h2 class="text-xl font-bold">4. Customer Userbase</h2>
+              <h2 class="text-xl font-bold">5. Customer Userbase</h2>
               <button onclick="refreshAllBalances()" class="text-sm bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-semibold py-1 px-3 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600">Refresh All</button>
             </div>
             <div id="customer-list-container" class="h-64 overflow-y-auto pr-2">
@@ -209,28 +229,12 @@
             const walletStatusDiv = document.getElementById('wallet-status');
             walletStatusDiv.innerHTML = `<div class="text-right"><p class="font-semibold text-green-500">Connected</p><p class="text-xs font-mono">${address.substring(0, 6)}...${address.substring(address.length - 4)}</p></div>`;
             addLogEntry(`Wallet ${address.substring(0,6)}... connected.`);
-            fetchSystemStats();
         } catch (err) {
             console.error("Connection failed:", err);
             showModal('Connection Failed', err.message || 'Could not connect to wallet.');
         }
     }
 
-    // --- Data Fetching ---
-    async function fetchSystemStats() {
-        if (!signer) return;
-        try {
-            const [yieldBal, spnSupply] = await Promise.all([
-                contracts.reward.balanceOf(addresses.yield),
-                contracts.spn.totalSupply()
-            ]);
-            document.getElementById('yield-balance').textContent = `${parseFloat(ethers.formatUnits(yieldBal, 6)).toFixed(2)} USDC`;
-            document.getElementById('spn-total-supply').textContent = `${parseFloat(ethers.formatUnits(spnSupply, 18)).toLocaleString()}`;
-        } catch (e) {
-            console.error("Failed to fetch system stats:", e);
-        }
-    }
-    
     // --- Customer Management & Persistence ---
     function saveCustomersToStorage() {
         localStorage.setItem('spn_customer_userbase', JSON.stringify(customers));
