@@ -239,15 +239,13 @@
                 const handleWithdraw = async () => {
                     if (!converterContract || !withdrawAddr || !withdrawAmt || !window.ethers) return;
                     
-                    const rawInput = issueAddress.trim();
                     let checksummedAddress;
                     try {
-                        checksummedAddress = window.ethers.utils.getAddress(rawInput);
-                    } catch (error) {
-                        showNotification('Invalid address for issuing SPN.', 'error');
+                        checksummedAddress = window.ethers.utils.getAddress(withdrawAddr);
+                    } catch (err) {
+                        showNotification('Invalid recipient address.', 'error');
                         return;
                     }
-
 
                     setIsLoading(true);
                     try {
