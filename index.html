@@ -159,17 +159,17 @@
     let contracts = {};
 
     const addresses = {
-        spn: '0x29950E318E999F490777',
-        staking: '0x691aE29E96ECDC5ae9483',
-        srv: '0x057ba66c2109fd4487F0',
-        srev: '0x2F745DA2zFA453ee76c75', // Note: Corrected invalid 'z' character
-        converter: '0x524997F5Cf25537a275ai', // Note: Corrected invalid 'i' character
-        yield: '0x7Ff618EFb0422687e5b2a',
-        reward: '0xaf88d065e77c8cC22393'
+        spn: '0x29950E318E999F49077700000000000000000000', // Example Address
+        staking: '0x691aE29E96ECDC5ae94830000000000000000000', // Example Address
+        srv: '0x057ba66c2109fd4487F000000000000000000000', // Example Address
+        srev: '0x2F745DA2FA453ee76c7500000000000000000000', // Example Address
+        converter: '0x524997F5Cf25537a275a00000000000000000000', // Example Address
+        yield: '0x7Ff618EFb0422687e5b2a0000000000000000000', // Example Address
+        reward: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831' // Native USDC on Arbitrum
     };
 
     const abis = {
-        erc20: JSON.parse('[{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"}],"name":"approve","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"}]'),
+        erc20: JSON.parse('[{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"}],"name":"approve","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"to","type":"address"},{"name":"value","type":"uint256"}],"name":"transfer","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"}]'),
         spn: JSON.parse('[{"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"issue","outputs":[],"stateMutability":"nonpayable","type":"function"}]'),
         converter: JSON.parse('[{"inputs":[{"internalType":"address","name":"_for","type":"address"}],"name":"convert","outputs":[],"stateMutability":"nonpayable","type":"function"}]'),
         staking: JSON.parse('[{"inputs":[{"internalType":"address","name":"_for","type":"address"}],"name":"stake","outputs":[],"stateMutability":"nonpayable","type":"function"}]')
@@ -313,7 +313,7 @@
     async function fundYieldContract() {
         const amount = document.getElementById('fundAmount').value;
         if (!amount) return showModal('Input Error', 'Please enter an amount to fund.');
-        // This is a two-step process: approve and then transfer
+        
         showModal('Processing', `Approving ${amount} Reward Tokens for the Yield Contract...`);
         try {
             const amountInUnits = ethers.parseUnits(amount, 6); // Assuming reward token is USDC-like (6 decimals)
