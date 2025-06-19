@@ -209,12 +209,28 @@
             const walletStatusDiv = document.getElementById('wallet-status');
             walletStatusDiv.innerHTML = `<div class="text-right"><p class="font-semibold text-green-500">Connected</p><p class="text-xs font-mono">${address.substring(0, 6)}...${address.substring(address.length - 4)}</p></div>`;
             addLogEntry(`Wallet ${address.substring(0,6)}... connected.`);
+            fetchSystemStats();
         } catch (err) {
             console.error("Connection failed:", err);
             showModal('Connection Failed', err.message || 'Could not connect to wallet.');
         }
     }
 
+    // --- Data Fetching ---
+    async function fetchSystemStats() {
+        if (!signer) return;
+        try {
+            const [yieldBal, spnSupply] = await Promise.all([
+                contracts.reward.balanceOf(addresses.yield),
+                contracts.spn.totalSupply()
+            ]);
+            document.getElementById('yield-balance').textContent = `${parseFloat(ethers.formatUnits(yieldBal, 6)).toFixed(2)} USDC`;
+            document.getElementById('spn-total-supply').textContent = `${parseFloat(ethers.formatUnits(spnSupply, 18)).toLocaleString()}`;
+        } catch (e) {
+            console.error("Failed to fetch system stats:", e);
+        }
+    }
+    
     // --- Customer Management & Persistence ---
     function saveCustomersToStorage() {
         localStorage.setItem('spn_customer_userbase', JSON.stringify(customers));
@@ -411,17 +427,6 @@
         `;
         document.body.appendChild(modal);
     }
-    
-    // --- Expose functions to global scope for HTML onclick handlers ---
-    window.connectWallet = connectWallet;
-    window.addCustomer = addCustomer;
-    window.refreshAllBalances = refreshAllBalances;
-    window.deleteCustomer = deleteCustomer;
-    window.issueSPN = issueSPN;
-    window.convertToSRV = convertToSRV;
-    window.stakeSRV = stakeSRV;
-    window.fundYieldContract = fundYieldContract;
-
   </script>
 </body>
 </html>
