@@ -59,12 +59,6 @@
             <div class="flex justify-between items-center"><span class="font-semibold text-gray-600 dark:text-gray-400">Reward Token:</span><a href="#" class="font-mono text-blue-500 hover:underline external-link">0xaf88...77c8cC22393</a></div>
           </div>
         </div>
-         <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
-            <h2 class="text-xl font-bold mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">Admin Wallet Info</h2>
-            <div id="admin-wallet-info" class="space-y-3 text-sm">
-                <p class="text-gray-500 dark:text-gray-400">Connect wallet to see balances.</p>
-            </div>
-        </div>
         <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
             <h2 class="text-xl font-bold mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">Fund Yield Contract</h2>
              <div class="flex items-center gap-4">
@@ -94,8 +88,23 @@
         
         <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
           <h2 class="text-xl font-bold mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">Customer Userbase</h2>
-            <div id="customer-list" class="space-y-3 h-64 overflow-y-auto pr-2">
-                <div class="text-gray-500 dark:text-gray-400 text-center py-10">No customers added yet.</div>
+            <div id="customer-list-container" class="h-64 overflow-y-auto pr-2">
+                <table class="w-full text-sm text-left">
+                    <thead class="sticky top-0 bg-gray-50 dark:bg-gray-700 text-xs text-gray-700 dark:text-gray-400 uppercase">
+                        <tr>
+                            <th scope="col" class="px-4 py-3">Customer</th>
+                            <th scope="col" class="px-4 py-3 text-right">SPN</th>
+                            <th scope="col" class="px-4 py-3 text-right">SRV</th>
+                            <th scope="col" class="px-4 py-3 text-right">SREV</th>
+                            <th scope="col" class="px-4 py-3 text-right">USDC</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customer-list">
+                        <tr>
+                            <td colspan="5" class="text-center py-10 text-gray-500 dark:text-gray-400">No customers added yet.</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
@@ -166,54 +175,34 @@
           </div>
         `;
         addLogEntry(`Wallet ${address.substring(0,6)}... connected.`);
-        fetchAdminWalletInfo();
       } catch (err) {
         console.error("Connection failed:", err);
         showModal('Connection Failed', err.message || 'Could not connect to wallet.');
       }
     }
 
-    async function fetchAdminWalletInfo() {
-        const walletInfoDiv = document.getElementById('admin-wallet-info');
-        // NOTE: This is placeholder data. In a real app, you would use contract instances to fetch balances.
-        walletInfoDiv.innerHTML = `
-            <div class="flex justify-between items-center"><span class="font-semibold text-gray-600 dark:text-gray-400">SPN Balance:</span><span class="font-mono text-cyan-400">1,250.50</span></div>
-            <div class="flex justify-between items-center"><span class="font-semibold text-gray-600 dark:text-gray-400">SRV Balance:</span><span class="font-mono text-cyan-400">8,430.12</span></div>
-            <div class="flex justify-between items-center"><span class="font-semibold text-gray-600 dark:text-gray-400">SREV Balance:</span><span class="font-mono text-cyan-400">950.00</span></div>
-            <div class="flex justify-between items-center"><span class="font-semibold text-gray-600 dark:text-gray-400">USDC Rewards:</span><span class="font-mono text-cyan-400">$5,123.75</span></div>
-        `;
-    }
-
     // --- Customer Management ---
     function renderCustomers() {
-        const customerList = document.getElementById('customer-list');
+        const customerListBody = document.getElementById('customer-list');
         if (customers.length === 0) {
-            customerList.innerHTML = `<div class="text-gray-500 dark:text-gray-400 text-center py-10">No customers added yet.</div>`;
+            customerListBody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-gray-500 dark:text-gray-400">No customers added yet.</td></tr>`;
             return;
         }
-        customerList.innerHTML = `
-            <div class="grid grid-cols-5 gap-4 text-xs font-bold text-gray-500 dark:text-gray-400 px-2 pb-2 border-b border-gray-200 dark:border-gray-700">
-                <span>Customer</span>
-                <span class="text-right">SPN</span>
-                <span class="text-right">SRV</span>
-                <span class="text-right">SREV</span>
-                <span class="text-right">USDC</span>
-            </div>
-        `;
+        customerListBody.innerHTML = '';
         customers.forEach(customer => {
-            const customerDiv = document.createElement('div');
-            customerDiv.className = 'grid grid-cols-5 gap-4 items-center bg-gray-50 dark:bg-gray-700/50 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700';
-            customerDiv.innerHTML = `
-                <div>
+            const tr = document.createElement('tr');
+            tr.className = 'bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 border-b dark:border-gray-700';
+            tr.innerHTML = `
+                <td class="px-4 py-3">
                     <p class="font-semibold text-sm text-gray-900 dark:text-gray-100">${customer.id}</p>
                     <p class="text-xs font-mono text-gray-500 dark:text-gray-400">${customer.wallet.substring(0,6)}...${customer.wallet.substring(38)}</p>
-                </div>
-                <span class="text-right font-mono">${customer.spn.toLocaleString()}</span>
-                <span class="text-right font-mono">${customer.srv.toLocaleString()}</span>
-                <span class="text-right font-mono">${customer.srev.toLocaleString()}</span>
-                <span class="text-right font-mono">$${customer.usdc.toFixed(2)}</span>
+                </td>
+                <td class="px-4 py-3 text-right font-mono">${customer.spn.toLocaleString()}</td>
+                <td class="px-4 py-3 text-right font-mono">${customer.srv.toLocaleString()}</td>
+                <td class="px-4 py-3 text-right font-mono">${customer.srev.toLocaleString()}</td>
+                <td class="px-4 py-3 text-right font-mono">$${customer.usdc.toFixed(2)}</td>
             `;
-            customerList.appendChild(customerDiv);
+            customerListBody.appendChild(tr);
         });
     }
 
