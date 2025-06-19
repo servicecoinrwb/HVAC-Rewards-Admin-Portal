@@ -19,6 +19,16 @@
         font-size: 0.8em;
         vertical-align: super;
     }
+    #customer-list::-webkit-scrollbar, #transaction-log::-webkit-scrollbar {
+        width: 6px;
+    }
+    #customer-list::-webkit-scrollbar-track, #transaction-log::-webkit-scrollbar-track {
+        background: #374151; /* gray-700 */
+    }
+    #customer-list::-webkit-scrollbar-thumb, #transaction-log::-webkit-scrollbar-thumb {
+        background: #6b7280; /* gray-500 */
+        border-radius: 3px;
+    }
   </style>
 </head>
 
@@ -72,18 +82,23 @@
           </div>
         </div>
         <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
-            <h2 class="text-xl font-bold mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">4. Fund Yield Contract</h2>
+            <h2 class="text-xl font-bold mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">Customer Userbase</h2>
+            <ul id="customer-list" class="space-y-3 h-48 overflow-y-auto pr-2">
+                <li class="text-gray-500 dark:text-gray-400">No customers added yet.</li>
+            </ul>
+        </div>
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
+            <h2 class="text-xl font-bold mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">Fund Yield Contract</h2>
              <div class="flex items-center gap-4">
                  <input id="fundAmount" type="number" placeholder="Amount of Reward Token" class="block w-full bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 p-3">
                  <button onclick="fundYieldContract()" class="w-auto bg-blue-600 text-white font-bold py-3 px-5 rounded-lg hover:bg-blue-700 transition-colors whitespace-nowrap">Fund</button>
              </div>
-          </div>
+        </div>
       </div>
 
       <!-- Right Column: Actions -->
       <div class="lg:col-span-2 space-y-8">
         
-        <!-- Add Customer -->
         <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
           <h2 class="text-xl font-bold mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">2. Add Customer to Dashboard</h2>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
@@ -99,7 +114,6 @@
           </div>
         </div>
 
-        <!-- Perform Actions -->
         <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
           <h2 class="text-xl font-bold mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">3. Perform Customer Actions</h2>
           <div class="mb-6">
@@ -108,7 +122,6 @@
           </div>
           
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <!-- Issue Points -->
             <div>
               <h3 class="font-semibold text-lg mb-2">Issue Points</h3>
               <div class="flex items-center gap-3">
@@ -117,7 +130,6 @@
               </div>
             </div>
             
-            <!-- Other Actions -->
             <div class="space-y-4">
                <div>
                   <h3 class="font-semibold text-lg">Convert SPN to SRV</h3>
@@ -133,6 +145,14 @@
           </div>
            <p class="text-center text-xs text-gray-500 dark:text-gray-400 mt-8 italic">These actions simulate calls to your secure backend, which holds customer keys and executes transactions.</p>
         </div>
+        
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
+          <h2 class="text-xl font-bold mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">Transaction Log</h2>
+           <ul id="transaction-log" class="space-y-2 h-40 overflow-y-auto text-sm">
+                <li class="text-gray-500 dark:text-gray-400">No actions performed yet.</li>
+            </ul>
+        </div>
+
       </div>
     </main>
   </div>
@@ -140,6 +160,7 @@
   <script>
     let provider;
     let signer;
+    let customers = [];
 
     // --- Wallet Connection ---
     async function connectWallet() {
@@ -159,23 +180,57 @@
             <p class="text-xs font-mono">${address.substring(0, 6)}...${address.substring(address.length - 4)}</p>
           </div>
         `;
-        showModal('Success', `Wallet ${address.substring(0,6)}... connected successfully.`);
+        addLogEntry(`Wallet ${address.substring(0,6)}... connected.`);
       } catch (err) {
         console.error("Connection failed:", err);
         showModal('Connection Failed', err.message || 'Could not connect to wallet.');
       }
     }
 
-    // --- Placeholder Functions for Actions ---
+    // --- Customer Management ---
+    function renderCustomers() {
+        const customerList = document.getElementById('customer-list');
+        if (customers.length === 0) {
+            customerList.innerHTML = `<li class="text-gray-500 dark:text-gray-400">No customers added yet.</li>`;
+            return;
+        }
+        customerList.innerHTML = '';
+        customers.forEach(customer => {
+            const li = document.createElement('li');
+            li.className = 'flex justify-between items-center bg-gray-100 dark:bg-gray-700 p-2 rounded-md';
+            li.innerHTML = `
+                <div>
+                    <p class="font-semibold">${customer.id}</p>
+                    <p class="text-xs font-mono text-gray-500 dark:text-gray-400">${customer.wallet}</p>
+                </div>
+            `;
+            customerList.appendChild(li);
+        });
+    }
+
+    // --- Action Functions ---
     function addCustomer() {
-        const customerNumber = document.getElementById('customerNumber').value;
-        const customerWallet = document.getElementById('customerWallet').value;
+        const customerNumberInput = document.getElementById('customerNumber');
+        const customerWalletInput = document.getElementById('customerWallet');
+        
+        const customerNumber = customerNumberInput.value.trim();
+        const customerWallet = customerWalletInput.value.trim();
+
         if (!customerNumber || !customerWallet) {
             showModal('Input Error', 'Please provide both a customer number and a wallet address.');
             return;
         }
-        showModal('Action Simulated', `Adding customer ${customerNumber} with wallet ${customerWallet.substring(0,6)}...`);
-        // In a real app, this would trigger a backend API call.
+        if (!ethers.isAddress(customerWallet)) {
+            showModal('Input Error', 'Please enter a valid wallet address.');
+            return;
+        }
+
+        customers.push({ id: customerNumber, wallet: customerWallet });
+        renderCustomers();
+        addLogEntry(`Added customer ${customerNumber} (${customerWallet.substring(0,6)}...).`);
+        
+        customerNumberInput.value = '';
+        customerWalletInput.value = '';
     }
     
     function issueSPN() {
@@ -185,7 +240,7 @@
             showModal('Input Error', 'Please provide a target wallet and an amount to issue.');
             return;
         }
-        showModal('Action Simulated', `Issuing ${amount} SPN to ${target.substring(0,6)}...`);
+        addLogEntry(`Issued ${amount} SPN to ${target.substring(0,6)}...`);
     }
 
     function convertToSRV() {
@@ -194,7 +249,7 @@
             showModal('Input Error', 'Please provide a target wallet address.');
             return;
         }
-        showModal('Action Simulated', `Converting SPN to SRV for ${target.substring(0,6)}...`);
+        addLogEntry(`Converted SPN to SRV for ${target.substring(0,6)}...`);
     }
 
     function stakeSRV() {
@@ -203,7 +258,7 @@
             showModal('Input Error', 'Please provide a target wallet address.');
             return;
         }
-        showModal('Action Simulated', `Staking SRV for ${target.substring(0,6)}...`);
+        addLogEntry(`Staked SRV for ${target.substring(0,6)}...`);
     }
     
     function fundYieldContract() {
@@ -212,7 +267,26 @@
             showModal('Input Error', 'Please enter an amount to fund.');
             return;
         }
-        showModal('Action Simulated', `Funding yield contract with ${amount} tokens...`);
+        addLogEntry(`Funded yield contract with ${amount} tokens.`);
+    }
+
+    // --- Logging ---
+    function addLogEntry(message) {
+        const logList = document.getElementById('transaction-log');
+        if (logList.children.length === 1 && logList.children[0].innerText.startsWith('No actions')) {
+            logList.innerHTML = '';
+        }
+        
+        const li = document.createElement('li');
+        li.className = 'text-gray-600 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700 pb-1';
+        
+        const timestamp = new Date().toLocaleTimeString();
+        li.innerHTML = `<span class="font-mono text-xs mr-2">[${timestamp}]</span> ${message}`;
+        
+        logList.prepend(li);
+        if (logList.children.length > 50) {
+            logList.removeChild(logList.lastChild);
+        }
     }
 
     // --- UI Utility: Modal ---
