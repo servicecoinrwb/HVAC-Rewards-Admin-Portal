@@ -18,13 +18,13 @@
         font-size: 0.8em;
         vertical-align: super;
     }
-    #customer-list::-webkit-scrollbar, #transaction-log::-webkit-scrollbar {
+    #customer-list-container::-webkit-scrollbar, #transaction-log::-webkit-scrollbar {
         width: 6px;
     }
-    #customer-list::-webkit-scrollbar-track, #transaction-log::-webkit-scrollbar-track {
+    #customer-list-container::-webkit-scrollbar-track, #transaction-log::-webkit-scrollbar-track {
         background: #374151; /* gray-700 */
     }
-    #customer-list::-webkit-scrollbar-thumb, #transaction-log::-webkit-scrollbar-thumb {
+    #customer-list-container::-webkit-scrollbar-thumb, #transaction-log::-webkit-scrollbar-thumb {
         background: #6b7280; /* gray-500 */
         border-radius: 3px;
     }
@@ -94,7 +94,7 @@
         
         <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
             <div class="flex justify-between items-center mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">
-              <h2 class="text-xl font-bold">Customer Userbase</h2>
+              <h2 class="text-xl font-bold">4. Customer Userbase</h2>
               <button onclick="refreshAllBalances()" class="text-sm bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-semibold py-1 px-3 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600">Refresh All</button>
             </div>
             <div id="customer-list-container" class="h-64 overflow-y-auto pr-2">
@@ -311,7 +311,6 @@
     async function fundYieldContract() {
         const amount = document.getElementById('fundAmount').value;
         if (!amount) return showModal('Input Error', 'Please enter an amount to fund.');
-        // This is a two-step process: approve and then transfer
         showModal('Processing', `Approving ${amount} Reward Tokens for the Yield Contract...`);
         try {
             const amountInUnits = ethers.parseUnits(amount, 6); // Assuming reward token is USDC-like (6 decimals)
@@ -319,8 +318,6 @@
             await approveTx.wait();
             addLogEntry('Approval successful. Now funding contract...');
             showModal('Processing', 'Approval successful. Now funding contract...');
-            // In a real scenario, a backend or another contract would call the Yield Contract's fund function
-            // Here, we simulate by transferring directly. A real implementation may differ.
             const transferTx = await contracts.reward.transfer(addresses.yield, amountInUnits);
             await transferTx.wait();
             showModal('Success', `Successfully funded Yield Contract with ${amount} tokens.`);
