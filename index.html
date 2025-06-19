@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -357,20 +359,6 @@
         await handleTransaction(contracts.staking, 'stake', [target], 'Stake SRV');
     }
     
-    async function sendSRV() {
-        const target = document.getElementById('targetCustomer').value;
-        const amount = document.getElementById('sendSrvAmount').value;
-        if (!target || !amount) return showModal('Input Error', 'Please provide a target wallet and an amount to send.');
-        await handleTransaction(contracts.srv, 'transfer', [target, ethers.parseUnits(amount, 18)], `Send ${amount} SRV`);
-    }
-    
-    async function sendSREV() {
-        const target = document.getElementById('targetCustomer').value;
-        const amount = document.getElementById('sendSrevAmount').value;
-        if (!target || !amount) return showModal('Input Error', 'Please provide a target wallet and an amount to send.');
-        await handleTransaction(contracts.srev, 'transfer', [target, ethers.parseUnits(amount, 18)], `Send ${amount} SREV`);
-    }
-
     async function fundYieldContract() {
         const amount = document.getElementById('fundAmount').value;
         if (!amount) return showModal('Input Error', 'Please enter an amount to fund.');
@@ -399,7 +387,6 @@
             showModal('Success', `"${name}" transaction confirmed!`);
             addLogEntry(`"${name}" transaction confirmed.`);
             refreshAllBalances();
-            fetchSystemStats();
         } catch (e) {
             console.error(`${name} failed:`, e);
             showModal('Error', `${name} failed: ${e.reason || e.message}`);
@@ -442,19 +429,6 @@
         `;
         document.body.appendChild(modal);
     }
-    
-    // --- Expose functions to global scope for HTML onclick handlers ---
-    window.connectWallet = connectWallet;
-    window.addCustomer = addCustomer;
-    window.refreshAllBalances = refreshAllBalances;
-    window.deleteCustomer = deleteCustomer;
-    window.issueSPN = issueSPN;
-    window.convertToSRV = convertToSRV;
-    window.stakeSRV = stakeSRV;
-    window.sendSRV = sendSRV;
-    window.sendSREV = sendSREV;
-    window.fundYieldContract = fundYieldContract;
-
   </script>
 </body>
 </html>
