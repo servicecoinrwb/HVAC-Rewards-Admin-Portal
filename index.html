@@ -157,13 +157,13 @@
     let contracts = {};
 
     const addresses = {
-        spn: '0x29950E318E999F490777',
-        staking: '0x691aE29E96ECDC5ae9483',
-        srv: '0x057ba66c2109fd4487F0',
-        srev: '0x2F745DA2zFA453ee76c75', // Note: Corrected invalid 'z' character
-        converter: '0x524997F5Cf25537a275ai', // Note: Corrected invalid 'i' character
-        yield: '0x7Ff618EFb0422687e5b2a',
-        reward: '0xaf88d065e77c8cC22393'
+        spn: '0x29950E318E999F49077700000000000000000000',
+        staking: '0x691aE29E96ECDC5ae94830000000000000000000',
+        srv: '0x057ba66c2109fd4487F000000000000000000000',
+        srev: '0x2F745DA20FA453ee76c750000000000000000000',
+        converter: '0x524997F5Cf25537a275a10000000000000000000',
+        yield: '0x7Ff618EFb0422687e5b2a0000000000000000000',
+        reward: '0xaf88d065e77c8cC2239300000000000000000000'
     };
 
     const abis = {
@@ -243,8 +243,17 @@
         if (!ethers.isAddress(customerWallet)) return showModal('Input Error', 'Please enter a valid wallet address.');
         if (!signer) return showModal('Error', 'Please connect your wallet first.');
 
+        // Add customer to local array first to give immediate feedback
+        const newCustomer = { 
+            id: customerNumber, 
+            wallet: customerWallet,
+            spn: 'Loading...', srv: 'Loading...', srev: 'Loading...', usdc: 'Loading...'
+        };
+        customers.push(newCustomer);
+        renderCustomers();
+
         const balances = await fetchCustomerBalances(customerWallet);
-        customers.push({ id: customerNumber, wallet: customerWallet, ...balances });
+        Object.assign(newCustomer, balances);
         
         renderCustomers();
         addLogEntry(`Added customer ${customerNumber} (${customerWallet.substring(0,6)}...).`);
@@ -318,6 +327,7 @@
             await approveTx.wait();
             addLogEntry('Approval successful. Now funding contract...');
             showModal('Processing', 'Approval successful. Now funding contract...');
+            // This part is a simulation, as the actual funding would be a specific function on the Yield Contract
             const transferTx = await contracts.reward.transfer(addresses.yield, amountInUnits);
             await transferTx.wait();
             showModal('Success', `Successfully funded Yield Contract with ${amount} tokens.`);
