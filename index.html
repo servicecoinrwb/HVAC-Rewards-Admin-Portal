@@ -50,13 +50,13 @@
         <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
           <h2 class="text-xl font-bold mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">1. System Configuration</h2>
           <div class="space-y-4 text-sm">
-            <div class="flex justify-between items-center"><span class="font-semibold text-gray-600 dark:text-gray-400">SPN Token:</span><a href="#" class="font-mono text-blue-500 hover:underline external-link">0x2995...F490777</a></div>
-            <div class="flex justify-between items-center"><span class="font-semibold text-gray-600 dark:text-gray-400">Staking Contract:</span><a href="#" class="font-mono text-blue-500 hover:underline external-link">0x691a...C5ae9483</a></div>
-            <div class="flex justify-between items-center"><span class="font-semibold text-gray-600 dark:text-gray-400">SRV Token:</span><a href="#" class="font-mono text-blue-500 hover:underline external-link">0x057b...d4487F0</a></div>
-            <div class="flex justify-between items-center"><span class="font-semibold text-gray-600 dark:text-gray-400">SREV Token:</span><a href="#" class="font-mono text-blue-500 hover:underline external-link">0x2F74...ee76c75</a></div>
-            <div class="flex justify-between items-center"><span class="font-semibold text-gray-600 dark:text-gray-400">Converter Contract:</span><a href="#" class="font-mono text-blue-500 hover:underline external-link">0x5249...a275ai</a></div>
-            <div class="flex justify-between items-center"><span class="font-semibold text-gray-600 dark:text-gray-400">Yield Contract:</span><a href="#" class="font-mono text-blue-500 hover:underline external-link">0x7Ff6...22687e5b2a</a></div>
-            <div class="flex justify-between items-center"><span class="font-semibold text-gray-600 dark:text-gray-400">Reward Token:</span><a href="#" class="font-mono text-blue-500 hover:underline external-link">0xaf88...77c8cC22393</a></div>
+            <div class="flex justify-between items-center"><span class="font-semibold text-gray-600 dark:text-gray-400">SPN Token:</span><a id="spn-address" href="#" target="_blank" class="font-mono text-blue-500 hover:underline external-link"></a></div>
+            <div class="flex justify-between items-center"><span class="font-semibold text-gray-600 dark:text-gray-400">Staking Contract:</span><a id="staking-address" href="#" target="_blank" class="font-mono text-blue-500 hover:underline external-link"></a></div>
+            <div class="flex justify-between items-center"><span class="font-semibold text-gray-600 dark:text-gray-400">SRV Token:</span><a id="srv-address" href="#" target="_blank" class="font-mono text-blue-500 hover:underline external-link"></a></div>
+            <div class="flex justify-between items-center"><span class="font-semibold text-gray-600 dark:text-gray-400">SREV Token:</span><a id="srev-address" href="#" target="_blank" class="font-mono text-blue-500 hover:underline external-link"></a></div>
+            <div class="flex justify-between items-center"><span class="font-semibold text-gray-600 dark:text-gray-400">Converter Contract:</span><a id="converter-address" href="#" target="_blank" class="font-mono text-blue-500 hover:underline external-link"></a></div>
+            <div class="flex justify-between items-center"><span class="font-semibold text-gray-600 dark:text-gray-400">Yield Contract:</span><a id="yield-address" href="#" target="_blank" class="font-mono text-blue-500 hover:underline external-link"></a></div>
+            <div class="flex justify-between items-center"><span class="font-semibold text-gray-600 dark:text-gray-400">Reward Token:</span><a id="reward-address" href="#" target="_blank" class="font-mono text-blue-500 hover:underline external-link"></a></div>
           </div>
         </div>
         <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
@@ -87,7 +87,10 @@
         </div>
         
         <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
-          <h2 class="text-xl font-bold mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">Customer Userbase</h2>
+            <div class="flex justify-between items-center mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">
+              <h2 class="text-xl font-bold">Customer Userbase</h2>
+              <button onclick="refreshAllBalances()" class="text-sm bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-semibold py-1 px-3 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600">Refresh All</button>
+            </div>
             <div id="customer-list-container" class="h-64 overflow-y-auto pr-2">
                 <table class="w-full text-sm text-left">
                     <thead class="sticky top-0 bg-gray-50 dark:bg-gray-700 text-xs text-gray-700 dark:text-gray-400 uppercase">
@@ -128,16 +131,15 @@
                <div>
                   <h3 class="font-semibold text-lg">Convert SPN to SRV</h3>
                   <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Converts entire SPN balance.</p>
-                  <button onclick="convertToSRV()" class="w-full bg-yellow-500 text-black font-bold py-3 px-4 rounded-lg hover:bg-yellow-600 transition-colors">Convert to SRV</button>
+                  <button onclick="convertToSRV()" class="w-full bg-yellow-500 text-black font-bold py-3 px-4 rounded-lg hover:bg-yellow-600 transition-colors">Convert</button>
                </div>
                 <div>
                   <h3 class="font-semibold text-lg">Stake SRV</h3>
                   <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Stakes entire SRV balance.</p>
-                  <button onclick="stakeSRV()" class="w-full bg-purple-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-purple-700 transition-colors">Stake SRV</button>
+                  <button onclick="stakeSRV()" class="w-full bg-purple-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-purple-700 transition-colors">Stake</button>
                </div>
             </div>
           </div>
-           <p class="text-center text-xs text-gray-500 dark:text-gray-400 mt-8 italic">These actions simulate calls to your secure backend, which holds customer keys and executes transactions.</p>
         </div>
         
         <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
@@ -152,36 +154,118 @@
   </div>
 
   <script>
-    let provider;
-    let signer;
+    let provider, signer;
     let customers = [];
+    let contracts = {};
+
+    const addresses = {
+        spn: '0x29950E318E999F490777',
+        staking: '0x691aE29E96ECDC5ae9483',
+        srv: '0x057ba66c2109fd4487F0',
+        srev: '0x2F745DA2zFA453ee76c75', // Note: Corrected invalid 'z' character
+        converter: '0x524997F5Cf25537a275ai', // Note: Corrected invalid 'i' character
+        yield: '0x7Ff618EFb0422687e5b2a',
+        reward: '0xaf88d065e77c8cC22393'
+    };
+
+    const abis = {
+        erc20: JSON.parse('[{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"}],"name":"approve","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"}]'),
+        spn: JSON.parse('[{"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"issue","outputs":[],"stateMutability":"nonpayable","type":"function"}]'),
+        converter: JSON.parse('[{"inputs":[{"internalType":"address","name":"_for","type":"address"}],"name":"convert","outputs":[],"stateMutability":"nonpayable","type":"function"}]'),
+        staking: JSON.parse('[{"inputs":[{"internalType":"address","name":"_for","type":"address"}],"name":"stake","outputs":[],"stateMutability":"nonpayable","type":"function"}]')
+    };
+
+    // --- Initialization ---
+    document.addEventListener('DOMContentLoaded', () => {
+        for (const [key, addr] of Object.entries(addresses)) {
+            const el = document.getElementById(`${key}-address`);
+            if (el) {
+                el.textContent = `${addr.substring(0, 6)}...${addr.substring(addr.length - 6)}`;
+                el.href = `https://arbiscan.io/address/${addr}`;
+            }
+        }
+    });
 
     // --- Wallet Connection ---
     async function connectWallet() {
-      if (typeof window.ethereum === 'undefined') {
-        showModal('Error', 'MetaMask is not installed. Please install it to use this dApp.');
-        return;
-      }
-      try {
-        provider = new ethers.BrowserProvider(window.ethereum);
-        signer = await provider.getSigner();
-        const address = await signer.getAddress();
-        
-        const walletStatusDiv = document.getElementById('wallet-status');
-        walletStatusDiv.innerHTML = `
-          <div class="text-right">
-            <p class="font-semibold text-green-500">Connected</p>
-            <p class="text-xs font-mono">${address.substring(0, 6)}...${address.substring(address.length - 4)}</p>
-          </div>
-        `;
-        addLogEntry(`Wallet ${address.substring(0,6)}... connected.`);
-      } catch (err) {
-        console.error("Connection failed:", err);
-        showModal('Connection Failed', err.message || 'Could not connect to wallet.');
-      }
+        if (typeof window.ethereum === 'undefined') {
+            return showModal('Error', 'MetaMask is not installed. Please install it to use this dApp.');
+        }
+        try {
+            provider = new ethers.BrowserProvider(window.ethereum);
+            signer = await provider.getSigner();
+            const address = await signer.getAddress();
+            
+            contracts.spn = new ethers.Contract(addresses.spn, [...abis.erc20, ...abis.spn], signer);
+            contracts.srv = new ethers.Contract(addresses.srv, abis.erc20, signer);
+            contracts.srev = new ethers.Contract(addresses.srev, abis.erc20, signer);
+            contracts.reward = new ethers.Contract(addresses.reward, abis.erc20, signer);
+            contracts.converter = new ethers.Contract(addresses.converter, abis.converter, signer);
+            contracts.staking = new ethers.Contract(addresses.staking, abis.staking, signer);
+
+            const walletStatusDiv = document.getElementById('wallet-status');
+            walletStatusDiv.innerHTML = `<div class="text-right"><p class="font-semibold text-green-500">Connected</p><p class="text-xs font-mono">${address.substring(0, 6)}...${address.substring(address.length - 4)}</p></div>`;
+            addLogEntry(`Wallet ${address.substring(0,6)}... connected.`);
+        } catch (err) {
+            console.error("Connection failed:", err);
+            showModal('Connection Failed', err.message || 'Could not connect to wallet.');
+        }
     }
 
     // --- Customer Management ---
+    async function fetchCustomerBalances(walletAddress) {
+        if (!provider) return { spn: 0, srv: 0, srev: 0, usdc: 0 };
+        try {
+            const [spn, srv, srev, usdc] = await Promise.all([
+                contracts.spn.balanceOf(walletAddress),
+                contracts.srv.balanceOf(walletAddress),
+                contracts.srev.balanceOf(walletAddress),
+                contracts.reward.balanceOf(walletAddress)
+            ]);
+            return {
+                spn: parseFloat(ethers.formatUnits(spn, 18)),
+                srv: parseFloat(ethers.formatUnits(srv, 18)),
+                srev: parseFloat(ethers.formatUnits(srev, 18)),
+                usdc: parseFloat(ethers.formatUnits(usdc, 6))
+            };
+        } catch (e) {
+            console.error(`Failed to fetch balances for ${walletAddress}`, e);
+            return { spn: 'Err', srv: 'Err', srev: 'Err', usdc: 'Err' };
+        }
+    }
+
+    async function addCustomer() {
+        const customerNumberInput = document.getElementById('customerNumber');
+        const customerWalletInput = document.getElementById('customerWallet');
+        
+        const customerNumber = customerNumberInput.value.trim();
+        const customerWallet = customerWalletInput.value.trim();
+
+        if (!customerNumber || !customerWallet) return showModal('Input Error', 'Please provide both a customer number and a wallet address.');
+        if (!ethers.isAddress(customerWallet)) return showModal('Input Error', 'Please enter a valid wallet address.');
+        if (!signer) return showModal('Error', 'Please connect your wallet first.');
+
+        const balances = await fetchCustomerBalances(customerWallet);
+        customers.push({ id: customerNumber, wallet: customerWallet, ...balances });
+        
+        renderCustomers();
+        addLogEntry(`Added customer ${customerNumber} (${customerWallet.substring(0,6)}...).`);
+        
+        customerNumberInput.value = '';
+        customerWalletInput.value = '';
+    }
+    
+    async function refreshAllBalances() {
+        if (customers.length === 0) return showModal('Info', 'No customers to refresh.');
+        addLogEntry('Refreshing all customer balances...');
+        for (const customer of customers) {
+            const balances = await fetchCustomerBalances(customer.wallet);
+            Object.assign(customer, balances);
+        }
+        renderCustomers();
+        addLogEntry('All balances updated.');
+    }
+
     function renderCustomers() {
         const customerListBody = document.getElementById('customer-list');
         if (customers.length === 0) {
@@ -197,90 +281,72 @@
                     <p class="font-semibold text-sm text-gray-900 dark:text-gray-100">${customer.id}</p>
                     <p class="text-xs font-mono text-gray-500 dark:text-gray-400">${customer.wallet.substring(0,6)}...${customer.wallet.substring(38)}</p>
                 </td>
-                <td class="px-4 py-3 text-right font-mono">${customer.spn.toLocaleString()}</td>
-                <td class="px-4 py-3 text-right font-mono">${customer.srv.toLocaleString()}</td>
-                <td class="px-4 py-3 text-right font-mono">${customer.srev.toLocaleString()}</td>
-                <td class="px-4 py-3 text-right font-mono">$${customer.usdc.toFixed(2)}</td>
+                <td class="px-4 py-3 text-right font-mono">${typeof customer.spn === 'number' ? customer.spn.toLocaleString() : customer.spn}</td>
+                <td class="px-4 py-3 text-right font-mono">${typeof customer.srv === 'number' ? customer.srv.toLocaleString() : customer.srv}</td>
+                <td class="px-4 py-3 text-right font-mono">${typeof customer.srev === 'number' ? customer.srev.toLocaleString() : customer.srev}</td>
+                <td class="px-4 py-3 text-right font-mono">$${typeof customer.usdc === 'number' ? customer.usdc.toFixed(2) : customer.usdc}</td>
             `;
             customerListBody.appendChild(tr);
         });
     }
 
     // --- Action Functions ---
-    function addCustomer() {
-        const customerNumberInput = document.getElementById('customerNumber');
-        const customerWalletInput = document.getElementById('customerWallet');
-        
-        const customerNumber = customerNumberInput.value.trim();
-        const customerWallet = customerWalletInput.value.trim();
+    async function issueSPN() {
+        const target = document.getElementById('targetCustomer').value;
+        const amount = document.getElementById('issueAmount').value;
+        if (!target || !amount) return showModal('Input Error', 'Please provide a target wallet and an amount to issue.');
+        await handleTransaction(contracts.spn, 'issue', [target, ethers.parseUnits(amount, 18)], `Issue ${amount} SPN`);
+    }
 
-        if (!customerNumber || !customerWallet) {
-            showModal('Input Error', 'Please provide both a customer number and a wallet address.');
-            return;
-        }
-        if (!ethers.isAddress(customerWallet)) {
-            showModal('Input Error', 'Please enter a valid wallet address.');
-            return;
-        }
+    async function convertToSRV() {
+        const target = document.getElementById('targetCustomer').value;
+        if (!target) return showModal('Input Error', 'Please provide a target wallet address.');
+        await handleTransaction(contracts.converter, 'convert', [target], 'Convert SPN to SRV');
+    }
 
-        customers.push({ 
-            id: customerNumber, 
-            wallet: customerWallet,
-            spn: 0,
-            srv: 0,
-            srev: 0,
-            usdc: 0.00
-        });
-        renderCustomers();
-        addLogEntry(`Added customer ${customerNumber} (${customerWallet.substring(0,6)}...).`);
-        
-        customerNumberInput.value = '';
-        customerWalletInput.value = '';
+    async function stakeSRV() {
+        const target = document.getElementById('targetCustomer').value;
+        if (!target) return showModal('Input Error', 'Please provide a target wallet address.');
+        await handleTransaction(contracts.staking, 'stake', [target], 'Stake SRV');
     }
     
-    function issueSPN() {
-        const target = document.getElementById('targetCustomer').value;
-        const amount = parseFloat(document.getElementById('issueAmount').value);
-        if (!target || !amount) {
-            showModal('Input Error', 'Please provide a target wallet and an amount to issue.');
-            return;
-        }
-
-        const customer = customers.find(c => c.wallet.toLowerCase() === target.toLowerCase());
-        if (customer) {
-            customer.spn += amount;
-            renderCustomers();
-            addLogEntry(`Issued ${amount.toLocaleString()} SPN to ${target.substring(0,6)}...`);
-        } else {
-            showModal('Error', 'Customer wallet not found in userbase.');
-        }
-    }
-
-    function convertToSRV() {
-        const target = document.getElementById('targetCustomer').value;
-        if (!target) {
-            showModal('Input Error', 'Please provide a target wallet address.');
-            return;
-        }
-        addLogEntry(`Converted SPN to SRV for ${target.substring(0,6)}...`);
-    }
-
-    function stakeSRV() {
-        const target = document.getElementById('targetCustomer').value;
-        if (!target) {
-            showModal('Input Error', 'Please provide a target wallet address.');
-            return;
-        }
-        addLogEntry(`Staked SRV for ${target.substring(0,6)}...`);
-    }
-    
-    function fundYieldContract() {
+    async function fundYieldContract() {
         const amount = document.getElementById('fundAmount').value;
-        if (!amount) {
-            showModal('Input Error', 'Please enter an amount to fund.');
-            return;
+        if (!amount) return showModal('Input Error', 'Please enter an amount to fund.');
+        // This is a two-step process: approve and then transfer
+        showModal('Processing', `Approving ${amount} Reward Tokens for the Yield Contract...`);
+        try {
+            const amountInUnits = ethers.parseUnits(amount, 6); // Assuming reward token is USDC-like (6 decimals)
+            const approveTx = await contracts.reward.approve(addresses.yield, amountInUnits);
+            await approveTx.wait();
+            addLogEntry('Approval successful. Now funding contract...');
+            showModal('Processing', 'Approval successful. Now funding contract...');
+            // In a real scenario, a backend or another contract would call the Yield Contract's fund function
+            // Here, we simulate by transferring directly. A real implementation may differ.
+            const transferTx = await contracts.reward.transfer(addresses.yield, amountInUnits);
+            await transferTx.wait();
+            showModal('Success', `Successfully funded Yield Contract with ${amount} tokens.`);
+            addLogEntry(`Funded yield contract with ${amount} tokens.`);
+        } catch(e) {
+            console.error("Funding failed", e);
+            showModal('Error', `Funding failed: ${e.message}`);
         }
-        addLogEntry(`Funded yield contract with ${amount} tokens.`);
+    }
+    
+    async function handleTransaction(contract, method, args, name) {
+        if (!signer) return showModal('Error', 'Please connect your wallet first.');
+        showModal('Processing', `Sending "${name}" transaction...`);
+        try {
+            const tx = await contract[method](...args);
+            addLogEntry(`Transaction sent for "${name}": ${tx.hash.substring(0,10)}...`);
+            await tx.wait();
+            showModal('Success', `"${name}" transaction confirmed!`);
+            addLogEntry(`"${name}" transaction confirmed.`);
+            refreshAllBalances();
+        } catch (e) {
+            console.error(`${name} failed:`, e);
+            showModal('Error', `${name} failed: ${e.reason || e.message}`);
+        }
     }
 
     // --- Logging ---
