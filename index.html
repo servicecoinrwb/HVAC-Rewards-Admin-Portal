@@ -87,31 +87,6 @@
         </div>
         
         <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
-            <div class="flex justify-between items-center mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">
-              <h2 class="text-xl font-bold">Customer Userbase</h2>
-              <button onclick="refreshAllBalances()" class="text-sm bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-semibold py-1 px-3 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600">Refresh All</button>
-            </div>
-            <div id="customer-list-container" class="h-64 overflow-y-auto pr-2">
-                <table class="w-full text-sm text-left">
-                    <thead class="sticky top-0 bg-gray-50 dark:bg-gray-700 text-xs text-gray-700 dark:text-gray-400 uppercase">
-                        <tr>
-                            <th scope="col" class="px-4 py-3">Customer</th>
-                            <th scope="col" class="px-4 py-3 text-right">SPN</th>
-                            <th scope="col" class="px-4 py-3 text-right">SRV</th>
-                            <th scope="col" class="px-4 py-3 text-right">SREV</th>
-                            <th scope="col" class="px-4 py-3 text-right">USDC</th>
-                        </tr>
-                    </thead>
-                    <tbody id="customer-list">
-                        <tr>
-                            <td colspan="5" class="text-center py-10 text-gray-500 dark:text-gray-400">No customers added yet.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
           <h2 class="text-xl font-bold mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">3. Perform Customer Actions</h2>
           <div class="mb-6">
             <label for="targetCustomer" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Target Customer Wallet Address</label>
@@ -140,6 +115,31 @@
                </div>
             </div>
           </div>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
+            <div class="flex justify-between items-center mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">
+              <h2 class="text-xl font-bold">4. Customer Userbase</h2>
+              <button onclick="refreshAllBalances()" class="text-sm bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-semibold py-1 px-3 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600">Refresh All</button>
+            </div>
+            <div id="customer-list-container" class="h-64 overflow-y-auto pr-2">
+                <table class="w-full text-sm text-left">
+                    <thead class="sticky top-0 bg-gray-50 dark:bg-gray-700 text-xs text-gray-700 dark:text-gray-400 uppercase">
+                        <tr>
+                            <th scope="col" class="px-4 py-3">Customer</th>
+                            <th scope="col" class="px-4 py-3 text-right">SPN</th>
+                            <th scope="col" class="px-4 py-3 text-right">SRV</th>
+                            <th scope="col" class="px-4 py-3 text-right">SREV</th>
+                            <th scope="col" class="px-4 py-3 text-right">USDC</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customer-list">
+                        <tr>
+                            <td colspan="5" class="text-center py-10 text-gray-500 dark:text-gray-400">No customers added yet.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
         
         <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
@@ -177,6 +177,7 @@
 
     // --- Initialization ---
     document.addEventListener('DOMContentLoaded', () => {
+        loadCustomersFromStorage();
         for (const [key, addr] of Object.entries(addresses)) {
             const el = document.getElementById(`${key}-address`);
             if (el) {
@@ -212,7 +213,19 @@
         }
     }
 
-    // --- Customer Management ---
+    // --- Customer Management & Persistence ---
+    function saveCustomersToStorage() {
+        localStorage.setItem('spn_customer_userbase', JSON.stringify(customers));
+    }
+
+    function loadCustomersFromStorage() {
+        const storedCustomers = localStorage.getItem('spn_customer_userbase');
+        if (storedCustomers) {
+            customers = JSON.parse(storedCustomers);
+            renderCustomers();
+        }
+    }
+
     async function fetchCustomerBalances(walletAddress) {
         if (!provider) return { spn: 0, srv: 0, srev: 0, usdc: 0 };
         try {
@@ -248,6 +261,7 @@
         const balances = await fetchCustomerBalances(customerWallet);
         customers.push({ id: customerNumber, wallet: customerWallet, ...balances });
         
+        saveCustomersToStorage();
         renderCustomers();
         addLogEntry(`Added customer ${customerNumber} (${customerWallet.substring(0,6)}...).`);
         
@@ -262,6 +276,7 @@
             const balances = await fetchCustomerBalances(customer.wallet);
             Object.assign(customer, balances);
         }
+        saveCustomersToStorage();
         renderCustomers();
         addLogEntry('All balances updated.');
     }
